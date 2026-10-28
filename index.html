@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description"
+    content="Mayur & Krina are getting married. Join us at Ravaya, Greater Noida, 14 to 17 December 2026.">
+  <meta property="og:title" content="Mayur & Krina · You're invited">
+  <meta property="og:description"
+    content="Join us for our wedding celebrations at Surat, Gujarat, 11 December 2026. #MayurWedsKrina">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#FBF8F4">
+  <link rel="stylesheet" href="style.css">
+  <title>Mayur &amp; Krina Wedding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+SC:wght@400;500;600&family=Pinyon+Script&display=swap">
+
+
+</head>
+
+<body>
+  <!-- ================= Cover ================= -->
+  <div id="envelope-screen">
+    <img class="wash" src="img/wash-blush.webp" alt="" style="left:-14%;top:-8%">
+    <img class="wash" src="img/wash-lavender.webp" alt="" style="right:-18%;top:18%;animation-delay:-6s">
+    <img class="wash" src="img/wash-peach.webp" alt="" style="left:-10%;bottom:-12%;animation-delay:-3s">
+    <img class="wash" src="img/wash-sage.webp" alt="" style="right:-12%;bottom:-16%;animation-delay:-9s">
+    <div class="jaali" aria-hidden="true"></div>
+    <div class="floral" style="rotate:180deg;left:-6%;top:-3%;--origin:5% 5%;--dur:7s" aria-hidden="true"><img
+        src="img/floral2.webp" alt=""></div>
+    <div class="floral flip" style="right:-8%;bottom:-4%;--origin:90% 95%;--dur:9s" aria-hidden="true"><img
+        src="img/floral3.webp" alt=""></div>
+    <div class="floral" style="left:-10%;bottom:6%;width:clamp(120px,28vw,240px);--dur:8s" aria-hidden="true"><img
+        src="img/floral1.webp" alt=""></div>
+    <canvas id="dust" aria-hidden="true"></canvas>
+    <div class="frame" aria-hidden="true"></div>
+
+    <div class="env-top">
+      <p class="eyebrow">The wedding celebration of</p>
+      <p class="names foil">Mayur &amp; Krina</p>
+      <p class="meta"><span>11 · 12 · 2026</span><i></i><span>Surat, Gujarat</span></p>
+    </div>
+
+    <div class="env-stage">
+      <button class="env" id="env" aria-label="Open the invitation">
+        <span class="back ptex"></span>
+        <span class="letter ptex" aria-hidden="true">
+          <span class="mono"></span>
+          <span class="l-small">Together with their families</span>
+          <span class="l-script">Mayur &amp; Krina</span>
+          <span class="l-small">request the pleasure of your company</span>
+        </span>
+        <svg class="pocket" viewBox="0 0 142 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="pk-l" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#EFE5D9" />
+              <stop offset="1" stop-color="#F6EFE6" />
+            </linearGradient>
+            <linearGradient id="pk-r" x1="1" y1="0" x2="0" y2="0">
+              <stop offset="0" stop-color="#EBE0D3" />
+              <stop offset="1" stop-color="#F4EDE3" />
+            </linearGradient>
+            <linearGradient id="pk-b" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0" stop-color="#F9F4ED" />
+              <stop offset="1" stop-color="#F0E8DC" />
+            </linearGradient>
+            <linearGradient id="goldline" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#9C7631" />
+              <stop offset=".5" stop-color="#EAD29A" />
+              <stop offset="1" stop-color="#9C7631" />
+            </linearGradient>
+            <linearGradient id="flapg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F9F4EC" />
+              <stop offset="1" stop-color="#EEE4D7" />
+            </linearGradient>
+            <pattern id="linerpat" width="7" height="7" patternUnits="userSpaceOnUse">
+              <rect width="7" height="7" fill="#F2D3D8" />
+              <path d="M3.5 .4 C5 2 5.4 2.4 6.6 3.5 C5.4 4.6 5 5 3.5 6.6 C2 5 1.6 4.6 .4 3.5 C1.6 2.4 2 2 3.5 .4Z"
+                fill="none" stroke="#C9A45E" stroke-width=".35" />
+              <circle cx="3.5" cy="3.5" r=".55" fill="#C9A45E" />
+            </pattern>
+            <filter id="ptexf" x="0" y="0" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="3" result="n" />
+              <feColorMatrix in="n" values="0 0 0 0 .5  0 0 0 0 .42  0 0 0 0 .36  0 0 0 .28 -.05" result="c" />
+              <feComposite in="c" in2="SourceGraphic" operator="in" result="t" />
+              <feMerge>
+                <feMergeNode in="SourceGraphic" />
+                <feMergeNode in="t" />
+              </feMerge>
+            </filter>
+          </defs>
+          <g filter="url(#ptexf)">
+            <path d="M0 0 L71 57 L0 100Z" fill="url(#pk-l)" />
+            <path d="M142 0 L71 57 L142 100Z" fill="url(#pk-r)" />
+            <path d="M0 100 L71 50 L142 100Z" fill="url(#pk-b)" />
+          </g>
+          <path d="M0 100 L71 50 L142 100" fill="none" stroke="url(#goldline)" stroke-width="1.4"
+            vector-effect="non-scaling-stroke" />
+          <path d="M3 98.8 L71 52.3 L139 98.8" fill="none" stroke="#D8BF8A" stroke-width=".6" opacity=".6"
+            vector-effect="non-scaling-stroke" />
+        </svg>
+        <span class="flap">
+          <svg viewBox="0 0 142 60" preserveAspectRatio="none" aria-hidden="true">
+            <g class="paper-face">
+              <path d="M5 0 H137 Q142 0 138.2 3.2 L71 60 L3.8 3.2 Q0 0 5 0Z" fill="url(#flapg)" filter="url(#ptexf)" />
+              <path d="M138.2 3.2 L71 60 L3.8 3.2" fill="none" stroke="url(#goldline)" stroke-width="1.6"
+                vector-effect="non-scaling-stroke" />
+              <path d="M132 3.4 L71 55 L10 3.4" fill="none" stroke="#D8BF8A" stroke-width=".6" opacity=".7"
+                vector-effect="non-scaling-stroke" />
+            </g>
+            <g class="liner">
+              <path d="M5 0 H137 Q142 0 138.2 3.2 L71 60 L3.8 3.2 Q0 0 5 0Z" fill="url(#linerpat)" />
+              <path d="M138.2 3.2 L71 60 L3.8 3.2" fill="none" stroke="url(#goldline)" stroke-width="1.6"
+                vector-effect="non-scaling-stroke" />
+            </g>
+          </svg>
+        </span>
+        <span class="sheen" aria-hidden="true"></span>
+        <span class="seal-wrap" aria-hidden="true">
+          <span class="seal-half l"></span>
+          <span class="seal-half r"></span>
+        </span>
+      </button>
+    </div>
+    <p class="tap-hint"><span>Tap the seal to open</span></p>
+  </div>
+
+  <main id="top">
+    <!-- ================= Hero ================= -->
+    <section class="hero">
+      <img class="wash" src="img/wash-blush.webp" alt="" style="left:-12%;top:30%">
+      <img class="wash" src="img/wash-lavender.webp" alt="" style="right:-14%;top:44%">
+      <div class="hero-art"><img id="hero-img" src="img/hero.webp"
+          alt="Watercolour garden with stone balustrades, floral urns and a lawn leading into the trees" width="2200"
+          height="917"></div>
+      <div class="wrap hero-inner">
+        <span class="mono" role="img" aria-label="Mayur and Krina monogram"></span>
+        <p class="eyebrow">Together with their families</p>
+        <h1 class="couple sheen-text">Mayur<span class="weds">weds</span>Krina</h1>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+        <p class="eyebrow">We are getting married</p>
+        <div class="scratch-box">
+          <div class="scratch-under">
+            <span class="small">Friday</span>
+            <span class="day">11th December 2026</span>
+            <span class="small">Surat, Gujarat</span>
+          </div>
+          <canvas id="scratch" aria-label="Scratch card. Drag across it to reveal the wedding date" role="img"></canvas>
+        </div>
+        <div class="countdown" aria-label="Countdown to the wedding">
+          <div><b id="cd-d">00</b><span>Days</span></div>
+          <div><b id="cd-h">00</b><span>Hours</span></div>
+          <div><b id="cd-m">00</b><span>Minutes</span></div>
+          <div><b id="cd-s">00</b><span>Seconds</span></div>
+        </div>
+        <a class="cal-link" id="cal-link" target="_blank" rel="noopener">Add to Google Calendar</a>
+      </div>
+    </section>
+
+    <!-- ================= Families ================= -->
+    <section id="families">
+      <img class="wash" src="img/wash-peach.webp" alt="" style="left:-18%;top:10%">
+      <img class="wash" src="img/wash-lavender.webp" alt="" style="right:-20%;bottom:0">
+      <div class="floral" style="rotate:-20deg;left:-46px;top:-56px;--dur:8s" aria-hidden="true"><img
+          src="img/floral1.webp" alt=""></div>
+      <div class="floral flip" style="right:-44px;bottom:-230px;width:clamp(130px,26vw,250px);--dur:9s;--origin:90% 90%"
+        aria-hidden="true"><img src="img/floral3.webp" alt=""></div>
+      <div class="wrap">
+        <p class="eyebrow">Two families, one promise</p>
+        <h2>Our Families</h2>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+        <div class="fam-grid">
+          <div class="fam">
+            <h3>Mayur</h3>
+            <p class="rel">Son of</p>
+            <p>Mr. Girish Saraiya &amp; Mrs. Mita Saraiya</p>
+            <p class="rel">Grandson of</p>
+            <p>Late Shri Natvarlal Saraiya &amp; Smt. Santiben Saraiya</p>
+          </div>
+          <div class="fam-mid" aria-hidden="true"></div>
+          <div class="fam">
+            <h3>Krina</h3>
+            <p class="rel">Daughter of</p>
+            <p>Mr. Lalit Gheewala &amp; Mrs. Priti Desai</p>
+            <p class="rel">Granddaughter of</p>
+            <p>Shri Harish Desai &amp; Smt. Leela Desai</p>
+          </div>
+        </div>
+        <p class="blessing">With the blessings of our elders, we invite you to celebrate the beginning of our forever.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= Story ================= -->
+    <section id="story">
+      <img class="wash" src="img/wash-blush2.webp" alt=""
+        style="left:50%;top:18%;translate:-50% 0;width:clamp(320px,80vw,620px)">
+      <div class="wrap">
+        <p class="eyebrow">Some chapters are written by destiny</p>
+        <h2>Our Story</h2>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+        <div class="carousel">
+          <button class="car-btn prev" id="prev" aria-label="Previous photo">‹</button>
+          <div class="track" id="track">
+            <div class="slide">
+              <figure>
+                <div class="photo"><img src="img/story1.webp" alt="We found our home" style="object-position:50% 62%">
+                </div>
+                <figcaption>We found our home</figcaption><span class="when">San Jose &middot; 2019</span>
+              </figure>
+            </div>
+            <div class="slide">
+              <figure>
+                <div class="photo"><img src="img/story2.webp" alt="Walking towards forever"
+                    style="object-position:50% 45%"></div>
+                <figcaption>Walking towards forever</figcaption><span class="when">Los Angeles &middot; 2021</span>
+              </figure>
+            </div>
+            <div class="slide">
+              <figure>
+                <div class="photo"><img src="img/story3.webp" alt="She said yes" style="object-position:50% 60%"></div>
+                <figcaption>She said yes</figcaption><span class="when">Dubai &middot; 2025</span>
+              </figure>
+            </div>
+            <div class="slide">
+              <figure>
+                <div class="photo"><img src="img/story4.webp" alt="From adventures to forever"
+                    style="object-position:50% 50%"></div>
+                <figcaption>From adventures to forever</figcaption><span class="when">Goa &middot; 2026</span>
+              </figure>
+            </div>
+          </div>
+          <button class="car-btn next" id="next" aria-label="Next photo">›</button>
+        </div>
+        <div class="dots" id="dots"></div>
+      </div>
+    </section>
+
+    <!-- ================= Events ================= -->
+    <section id="events">
+      <div class="floral flip" style="rotate:-160deg;right:-50px;top:-230px;--dur:8.5s;--origin:90% 10%"
+        aria-hidden="true"><img src="img/floral2.webp" alt=""></div>
+      <div class="wrap">
+        <p class="eyebrow">Four celebrations, one forever</p>
+        <h2>Schedule of Events</h2>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+        <div class="events-list" id="events-list">
+          <article class="event">
+            <div class="art-wrap"><img class="wash" src="img/wash-blush.webp" alt=""><img class="art"
+                src="img/mehendi.webp"
+                alt="Watercolour of the bride and her friends applying mehendi among marigolds and roses"></div>
+            <p class="when">Wednesday &middot; 9th December 2026</p>
+            <h3 class="sheen-text">Mehendi</h3>
+            <p class="meta">5:00 PM &middot; Indigo Banquet, Ravaya</p>
+            <p class="dress">Dress code: Shades of green <i style="background:#93AE98"></i><i
+                style="background:#C9D8B6"></i></p>
+            <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Ravaya%20Banquet%2C%20Sector%20R-4%2C%20Greater%20Noida%2C%20Uttar%20Pradesh%20201310"
+              target="_blank" rel="noopener">Get directions</a>
+          </article>
+          <article class="event">
+            <div class="art-wrap"><img class="wash" src="img/wash-peach.webp" alt=""><img class="art"
+                src="img/haldi.webp" alt="Watercolour of the couple at a brass urli with haldi, parasols and marigolds">
+            </div>
+            <p class="when">Thursday &middot; 10th December 2026</p>
+            <h3 class="sheen-text">Haldi</h3>
+            <p class="meta">10:00 AM &middot; Dhanush Villa, Surat</p>
+            <p class="dress">Dress code: Traditional, pastels welcome <i style="background:#E9C46A"></i><i
+                style="background:#F4CDB0"></i></p>
+            <a href="https://maps.app.goo.gl/tQjNgFm3FGrhH8YJ8" target="_blank" rel="noopener">Get directions</a>
+          </article>
+          <article class="event">
+            <div class="art-wrap"><img class="wash" src="img/wash-lavender.webp" alt=""><img class="art"
+                src="img/reception.webp"
+                alt="Watercolour of the couple dancing under chandeliers framed by wisteria and pearls"></div>
+            <p class="when">Thursday &middot; 10th December 2026</p>
+            <h3 class="sheen-text">Reception</h3>
+            <p class="meta">6:00 PM &middot; Rosmarinus Restro, Surat</p>
+            <p class="dress">Dress code: Festive Attire - Come dressed to celebrate in style <i
+                style="background:#3D3957"></i><i style="background:#B08A45"></i></p>
+            <a href="https://maps.app.goo.gl/T5NM2CRHg4DG46UF7" target="_blank" rel="noopener">Get directions</a>
+          </article>
+          <article class="event">
+            <div class="art-wrap"><img class="wash" src="img/wash-blush2.webp" alt=""><img class="art"
+                src="img/wedding.webp" alt="Watercolour of the couple before a red floral mandap with brass lamps">
+            </div>
+            <p class="when">Friday &middot; 11th December 2026</p>
+            <h3 class="sheen-text">Wedding</h3>
+            <p class="meta">6:00 PM &middot; Viththalbapa Farm House, Surat</p>
+            <p class="dress">Dress code: Wedding Festivities - celebratory and traditional. <i
+                style="background:#EDB8C0"></i><i style="background:#FBF8F4"></i></p>
+            <a href="https://maps.app.goo.gl/JfvQJVyed257qmyeA" target="_blank" rel="noopener">Get directions</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Venue ================= -->
+    <!-- <section id="venue">
+      <div class="floral" style="rotate:25deg;left:-56px;top:-50px;--dur:9s" aria-hidden="true"><img
+          src="img/floral3.webp" alt=""></div>
+      <div class="wrap">
+        <p class="eyebrow">Getting there</p>
+        <h2>The Venue</h2>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+        <div class="venue-art">
+          <img class="wash" src="img/wash-peach.webp" alt="">
+          <img src="img/venue.webp"
+            alt="Watercolour illustration of Ravaya with its sweeping wooden canopy and glass facade" width="1600"
+            height="710">
+        </div>
+        <div class="venue-card">
+          <div class="vc-date">
+            <span class="side">December<br>2026</span>
+            <b>15</b>
+            <span class="side">6:00 PM<br>onwards</span>
+          </div>
+          <p class="vc-name">Ravaya</p>
+          <p class="vc-addr">Sector R-4, Plot No. 2, near GNIDA Metro Station, Purvanchal Silver City 2, Greater Noida,
+            Uttar Pradesh 201310</p>
+          <a class="btn-cal" id="cal-link-2" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <rect x="3" y="5" width="18" height="16" rx="2" />
+              <path d="M3 10h18M8 3v4M16 3v4" />
+            </svg>
+            Add to calendar
+          </a>
+        </div>
+
+        <div class="map-card">
+          <svg viewBox="0 0 460 240" role="img"
+            aria-label="Map showing Ravaya beside GNIDA Office metro station in Greater Noida">
+            <rect width="460" height="240" fill="#F7F3F5" />
+            <g fill="#EDE6EC">
+              <rect x="24" y="22" width="80" height="46" rx="5" />
+              <rect x="330" y="26" width="100" height="44" rx="5" />
+              <rect x="346" y="160" width="86" height="54" rx="5" />
+              <rect x="40" y="170" width="96" height="48" rx="5" />
+              <rect x="190" y="18" width="64" height="38" rx="5" />
+            </g>
+            <g fill="#DCE9DD">
+              <circle cx="150" cy="44" r="22" />
+              <circle cx="420" cy="118" r="18" />
+              <ellipse cx="250" cy="206" rx="34" ry="20" />
+            </g>
+            <g fill="none" stroke-linecap="round">
+              <g stroke="#fff" stroke-width="12">
+                <path d="M-10 70 C120 90 230 110 470 190" />
+                <path d="M180 -10 C200 70 215 150 230 250" />
+                <path d="M-10 150 C100 140 180 132 470 120" />
+              </g>
+              <g stroke="#C8B6D6" stroke-width="5">
+                <path d="M-10 70 C120 90 230 110 470 190" />
+              </g>
+              <g stroke="#E3D7E6" stroke-width="3.5">
+                <path d="M180 -10 C200 70 215 150 230 250" />
+                <path d="M-10 150 C100 140 180 132 470 120" />
+              </g>
+              <path d="M0 108 C90 112 170 120 290 100 S420 60 470 50" stroke="#6FB7B9" stroke-width="3"
+                stroke-dasharray="7 5" />
+            </g>
+            <circle cx="209" cy="132" r="15" fill="none" stroke="#fff" stroke-width="7" />
+            <circle cx="209" cy="132" r="15" fill="none" stroke="#E3D7E6" stroke-width="3" />
+            <g transform="translate(296 99)">
+              <circle r="7" fill="#fff" stroke="#6FB7B9" stroke-width="2.6" /><text x="-10" y="-12" text-anchor="end"
+                font-family="Cormorant SC, Georgia, serif" font-size="12" font-weight="600" fill="#4E8E90"
+                letter-spacing="1">GNIDA OFFICE METRO</text>
+            </g>
+            <text x="14" y="62" font-family="Cormorant SC, Georgia, serif" font-size="11" fill="#9A87A8"
+              letter-spacing="1.5" transform="rotate(8 14 62)">NOIDA–GREATER NOIDA EXPWY</text>
+            <text x="226" y="160" font-family="Cormorant SC, Georgia, serif" font-size="11" fill="#9A87A8"
+              letter-spacing="1.5">PARI CHOWK</text>
+            <g transform="translate(330 128)">
+              <ellipse cx="0" cy="26" rx="14" ry="5" fill="#B08A45" opacity=".2" />
+              <path d="M0 26 C-11 12 -13 6 -13 0 a13 13 0 0 1 26 0 c0 6 -2 12 -13 26z" fill="#B08A45" />
+              <circle cx="0" cy="0" r="5" fill="#FBF8F4" />
+              <text x="20" y="4" font-family="Cormorant SC, Georgia, serif" font-size="15" font-weight="600"
+                fill="#3D3957" letter-spacing="1.5">RAVAYA</text>
+            </g>
+          </svg>
+          <div class="map-foot">
+            <div><b>Ravaya</b><span>Sector R-4, Greater Noida</span></div>
+            <a class="btn-dir" id="dir-link" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                <path d="M21 3 3 10.5l7.5 3 3 7.5z" />
+              </svg>
+              Directions
+            </a>
+          </div>
+        </div>
+
+        <div class="travel">
+          <div>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M10.5 12 3 9.5l1.5-1.5 8 1 3.5-4a1.8 1.8 0 0 1 2.5 2.5l-4 3.5 1 8-1.5 1.5L12 13l-3 3v2.5L7.5 20l-1-3-3-1L5 14.5h2.5z" />
+              </svg></span>
+            <h3>Nearest airport</h3>
+            <p>Indira Gandhi International Airport, Delhi</p>
+            <small>About 60 km · 1.5 hours by car</small>
+          </div>
+          <div>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="3" width="14" height="14" rx="3" />
+                <path d="M5 10h14M9 17l-2 4M15 17l2 4" />
+                <circle cx="9" cy="13.5" r=".8" />
+                <circle cx="15" cy="13.5" r=".8" />
+              </svg></span>
+            <h3>Railway station</h3>
+            <p>New Delhi Railway Station</p>
+            <small>About 50 km · 1.5 hours by car</small>
+          </div>
+          <div>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 4h12a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2z" />
+                <path d="M4 11h16M8 21l2-3M16 21l-2-3" />
+              </svg></span>
+            <h3>Nearest metro</h3>
+            <p>GNIDA Office Station</p>
+            <small>Aqua Line · right by the venue</small>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- ================= RSVP ================= -->
+    <!-- <section id="rsvp">
+      <img class="wash" src="img/wash-lavender.webp" alt="" style="left:-16%;top:22%">
+      <img class="wash" src="img/wash-blush.webp" alt="" style="right:-16%;bottom:8%">
+      <div class="floral flip" style="right:-46px;top:-50px;--dur:8s;--origin:90% 90%" aria-hidden="true"><img
+          src="img/floral1.webp" alt=""></div>
+      <div class="wrap">
+        <p class="eyebrow">Kindly respond by 30th November 2026</p>
+        <h2>Will you join us?</h2>
+        <div class="rsvp-card" id="rsvp-card">
+          <form id="rsvp-form" novalidate>
+            <span class="mono" aria-hidden="true"></span>
+            <h3>RSVP</h3>
+            <div class="field">
+              <label for="r-name">Full name</label>
+              <input type="text" id="r-name" autocomplete="name" placeholder="Enter your name">
+            </div>
+            <p class="err" id="r-err" role="alert"></p>
+            <div class="field">
+              <span class="lbl">Will you be attending?</span>
+              <div class="seg">
+                <input type="radio" name="attend" id="r-yes" value="yes" checked><label for="r-yes">Joyfully
+                  accept</label>
+                <input type="radio" name="attend" id="r-no" value="no"><label for="r-no">Regretfully decline</label>
+              </div>
+            </div>
+            <div id="attend-extra">
+              <div class="field">
+                <span class="lbl">Number of guests</span>
+                <div class="stepper">
+                  <button type="button" id="g-minus" aria-label="Fewer guests">−</button>
+                  <output id="g-count" aria-live="polite">2</output>
+                  <button type="button" id="g-plus" aria-label="More guests">+</button>
+                </div>
+              </div>
+              <div class="field">
+                <span class="lbl">Events you'll be joining</span>
+                <div class="checks" id="r-events"></div>
+              </div>
+            </div>
+            <button class="send" type="submit">Send RSVP on WhatsApp</button>
+            <p class="rsvp-note">Your reply opens in WhatsApp, ready to send to the family.</p>
+          </form>
+        </div>
+      </div>
+    </section> -->
+
+    <footer>
+      <img class="wash" src="img/wash-peach.webp" alt="" style="left:50%;top:0;translate:-50% 0">
+      <div class="wrap">
+        <span class="mono" aria-hidden="true"></span>
+        <p class="eyebrow">Until our forever begins</p>
+        <p class="script">Mayur &amp; Krina</p>
+        <div class="ornament" aria-hidden="true"><span>✦</span></div>
+        <p class="tag">#Mayrina</p>
+      </div>
+    </footer>
+  </main>
+
+  <button class="music" id="music" aria-label="Play music" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+      stroke-linejoin="round" id="music-icon"></svg>
+  </button>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <canvas id="petals" aria-hidden="true"></canvas>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
