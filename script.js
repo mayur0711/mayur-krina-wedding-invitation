@@ -9,7 +9,7 @@
     whatsapp:"919725956266"
   };
   const EVENTS = [
-    {name:"Mehendi",img:"img/mehendi.webp",wash:"img/wash-blush.webp",day:"Monday",date:"14th December",short:"14 Dec",time:"5:00 PM",venue:"Indigo Banquet, Ravaya",dress:"Shades of green",sw:["#93AE98","#C9D8B6"],alt:"Watercolour of the bride and her friends applying mehendi among marigolds and roses"},
+    {name:"Mehendi",img:"img/mehendi.webp",wash:"img/wash-blush.webp",day:"Wednesday",date:"9th December",short:"9 Dec",time:"6:00 PM",venue:"Groom & Bride Residences",dress:"",sw:[],alt:"Watercolour of the bride and her friends applying mehendi among marigolds and roses"},
     {name:"Haldi",img:"img/haldi.webp",wash:"img/wash-peach.webp",day:"Tuesday",date:"15th December",short:"15 Dec",time:"9:00 AM",venue:"Poolside, Ravaya",dress:"Yellows and florals",sw:["#E9C46A","#F4CDB0"],alt:"Watercolour of the couple at a brass urli with haldi, parasols and marigolds"},
     {name:"Wedding",img:"img/wedding.webp",wash:"img/wash-blush2.webp",day:"Tuesday",date:"15th December",short:"15 Dec",time:"6:00 PM",venue:"The Lawn, Ravaya",dress:"Traditional, pastels welcome",sw:["#EDB8C0","#FBF8F4"],alt:"Watercolour of the couple before a red floral mandap with brass lamps"},
     {name:"Reception",img:"img/reception.webp",wash:"img/wash-lavender.webp",day:"Thursday",date:"17th December",short:"17 Dec",time:"7:00 PM",venue:"Turquoise Banquet, Ravaya",dress:"Black tie, Indian formal",sw:["#3D3957","#B08A45"],alt:"Watercolour of the couple dancing under chandeliers framed by wisteria and pearls"}
