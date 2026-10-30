@@ -25,6 +25,107 @@
   const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+  /* ================= Dynamic Guest Invitation ================= */
+  let guestInfo = null;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const rawTo = (params.get("to") || params.get("name") || params.get("guest") || "").trim();
+    const rawGuests = (params.get("guests") || params.get("members") || params.get("count") || params.get("seats") || "").trim();
+    const famParam = (params.get("family") || params.get("type") || "").trim().toLowerCase();
+
+    // Any number given in 'guests', 'members', 'count', 'seats', OR 'family' (e.g. ?family=1 or ?guests=1)
+    // is considered as member count (1 = 1 member, 2 = 2 members), NOT full family!
+    let numGuests = null;
+    if (rawGuests && !isNaN(parseInt(rawGuests, 10))) {
+      numGuests = Math.max(1, parseInt(rawGuests, 10));
+    } else if (famParam && !isNaN(parseInt(famParam, 10))) {
+      numGuests = Math.max(1, parseInt(famParam, 10));
+    }
+
+    // Full family is ONLY when words like 'all', 'full', 'family', 'yes', 'true' are used without a number
+    const isFamily = numGuests === null && (
+      famParam === "all" || 
+      famParam === "full" || 
+      famParam === "family" || 
+      famParam === "yes" || 
+      famParam === "true" || 
+      rawGuests.toLowerCase() === "all" || 
+      rawGuests.toLowerCase() === "full" || 
+      rawGuests.toLowerCase() === "family"
+    );
+
+    if (rawTo || isFamily || numGuests !== null) {
+      guestInfo = {
+        to: rawTo,
+        isFamily: isFamily,
+        count: numGuests
+      };
+
+      // 1. Envelope Cover Tag
+      const envTag = $("#env-guest-tag");
+      if (envTag) {
+        envTag.hidden = false;
+        if (guestInfo.isFamily) {
+          const hasFam = /family/i.test(guestInfo.to);
+          const toFormatted = guestInfo.to ? (hasFam ? esc(guestInfo.to) + " · " : esc(guestInfo.to) + " &amp; ") : "";
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${toFormatted}Full Family</b>`;
+        } else if (guestInfo.count) {
+          const label = guestInfo.count === 1 ? "1 Member" : `${guestInfo.count} Members`;
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${guestInfo.to ? esc(guestInfo.to) + " · " : ""}${label}</b>`;
+        } else {
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${esc(guestInfo.to)}</b>`;
+        }
+      }
+
+      // 2. Letter inside Envelope
+      const letterGuest = $("#letter-guest");
+      if (letterGuest) {
+        letterGuest.hidden = false;
+        if (guestInfo.isFamily) {
+          letterGuest.textContent = "✦ Full Family Invited (સપરિવાર) ✦";
+        } else if (guestInfo.count) {
+          letterGuest.textContent = `✦ ${guestInfo.count} ${guestInfo.count === 1 ? 'Member' : 'Members'} Invited ✦`;
+        } else {
+          letterGuest.textContent = `✦ Cordially Invited: ${guestInfo.to} ✦`;
+        }
+      }
+
+      // 3. Hero Section Guest Card
+      const guestCard = $("#guest-card");
+      if (guestCard) {
+        guestCard.hidden = false;
+        const gcBadge = $("#gc-badge");
+        const gcName = $("#gc-name");
+        const gcMsg = $("#gc-msg");
+        const gcNote = $("#gc-note");
+
+        if (guestInfo.isFamily) {
+          if (gcBadge) gcBadge.textContent = "✦ Cordially Invited With Family ✦";
+          const hasFam = /family/i.test(guestInfo.to);
+          const salutation = guestInfo.to 
+            ? `Dear ${guestInfo.to}${hasFam ? "" : " & Family"},` 
+            : "Dear Family & Loved Ones,";
+          if (gcName) gcName.textContent = salutation;
+          if (gcMsg) gcMsg.innerHTML = "Our celebration is complete with your blessings. We warmly invite your <b>entire family</b> to join us and celebrate Mayur &amp; Krina's wedding.";
+          if (gcNote) gcNote.textContent = "સપરિવાર પધારવા હાર્દિક નિમંત્રણ · Full Family Invited";
+        } else if (guestInfo.count) {
+          const countText = guestInfo.count === 1 ? "1 member" : `${guestInfo.count} members`;
+          if (gcBadge) gcBadge.textContent = `✦ Special Invitation · ${guestInfo.count === 1 ? '1 Member' : guestInfo.count + ' Members'} ✦`;
+          if (gcName) gcName.textContent = guestInfo.to ? `Dear ${guestInfo.to},` : "Dear Guests,";
+          if (gcMsg) gcMsg.innerHTML = `We request the pleasure of your company and warmly invite <b>${countText} from your family</b> to celebrate our special day with us.`;
+          if (gcNote) gcNote.textContent = "Mayur & Krina look forward to celebrating together";
+        } else {
+          if (gcBadge) gcBadge.textContent = "✦ Special Invitation ✦";
+          if (gcName) gcName.textContent = `Dear ${guestInfo.to},`;
+          if (gcMsg) gcMsg.innerHTML = "We request the pleasure of your company to celebrate the wedding of Mayur &amp; Krina.";
+          if (gcNote) gcNote.textContent = "Mayur & Krina look forward to celebrating together";
+        }
+      }
+    }
+  } catch(e) {
+    console.error("Guest info parse error:", e);
+  }
+
   /* ================= Wax seal ================= */
   const sealSVG = id => `<svg viewBox="0 0 120 120" aria-hidden="true">
     <defs>
@@ -252,7 +353,13 @@
   /* ================= RSVP ================= */
   const rsvpForm=$("#rsvp-form");
   if(rsvpForm){
-    let guests=2; const gOut=$("#g-count");
+    let guests = (guestInfo && guestInfo.count) ? guestInfo.count : (guestInfo && guestInfo.isFamily ? 4 : 2);
+    const gOut=$("#g-count");
+    if(gOut) gOut.textContent=guests;
+    if(guestInfo && guestInfo.to){
+      const rName=$("#r-name");
+      if(rName && !rName.value) rName.value=guestInfo.to;
+    }
     const gMinus=$("#g-minus"), gPlus=$("#g-plus");
     if(gMinus) gMinus.addEventListener("click",()=>{guests=Math.max(1,guests-1);if(gOut) gOut.textContent=guests;});
     if(gPlus) gPlus.addEventListener("click",()=>{guests=Math.min(10,guests+1);if(gOut) gOut.textContent=guests;});
@@ -270,8 +377,9 @@
       const rYes=$("#r-yes");
       const yes=rYes ? rYes.checked : true;
       const evs=chk ? [...chk.querySelectorAll("input:checked")].map(i=>i.value) : [];
+      const inviteNote = guestInfo ? (guestInfo.isFamily ? " (Full Family)" : (guestInfo.count ? ` (${guestInfo.count} members invited)` : "")) : "";
       const msg = yes
-        ? `RSVP for ${WEDDING.couple[0]} & ${WEDDING.couple[1]}'s wedding\n\nName: ${name}\nAttending: Joyfully accept\nGuests: ${guests}\nEvents: ${evs.length?evs.join(", "):"None selected"}`
+        ? `RSVP for ${WEDDING.couple[0]} & ${WEDDING.couple[1]}'s wedding\n\nName: ${name}\nAttending: Joyfully accept${inviteNote}\nGuests: ${guests}\nEvents: ${evs.length?evs.join(", "):"None selected"}`
         : `RSVP for ${WEDDING.couple[0]} & ${WEDDING.couple[1]}'s wedding\n\nName: ${name}\nAttending: Regretfully decline\nSending our love and blessings.`;
       const url=`https://wa.me/${WEDDING.whatsapp}?text=${encodeURIComponent(msg)}`;
       const card=$("#rsvp-card");
@@ -291,7 +399,6 @@
   const ICON_ON='<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>';
   const ICON_OFF='<path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/>';
   if(icon) icon.innerHTML=ICON_OFF;
-  icon.innerHTML=ICON_OFF;
   /* Harp and strings: flowing harp arpeggios over a soft string pad */
   let ac=null, playing=false, timer=null, out=null, wet=null, step=0;
   const M=m=>440*Math.pow(2,(m-69)/12);
