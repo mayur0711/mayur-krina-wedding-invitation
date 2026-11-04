@@ -81,7 +81,9 @@
     setTimeout(()=>{
       screen.classList.add("gone");
       document.body.classList.remove("locked");
-      document.querySelectorAll(".hero-inner > *").forEach((el,i)=>{el.style.animationDelay=(i*0.08)+"s";el.classList.add("reveal-in");});
+      const heroEl = $(".hero");
+      if(heroEl) heroEl.classList.add("hero-revealed");
+      document.querySelectorAll(".hero-inner > *").forEach((el,i)=>{el.style.animationDelay=(0.18 + i*0.08)+"s";el.classList.add("reveal-in");});
       sizeScratch();
       setTimeout(()=>{dustOn=false;},1200);
     }, reduce ? 50 : 2900);
