@@ -193,48 +193,90 @@
     });
     let cur=0;
 
-    function getSlidePos(i){
-      if(!slides[i] || !slides[0]) return 0;
-      return slides[i].offsetLeft - slides[0].offsetLeft;
-    }
-
-    function syncDots(){
-      const scrollPos = track.scrollLeft;
-      let closest = 0;
-      let minDiff = Infinity;
-      slides.forEach((s, i) => {
-        const diff = Math.abs(getSlidePos(i) - scrollPos);
-        if(diff < minDiff){
-          minDiff = diff;
-          closest = i;
-        }
-      });
-      cur = closest;
+    function updateDots(){
       [...dots.children].forEach((d,i)=>d.setAttribute("aria-current",i===cur));
     }
 
-    function go(i){
+    function go(i, animate=true){
       if(!slides.length) return;
       cur=(i+slides.length)%slides.length;
-      const targetLeft = getSlidePos(cur);
-      track.scrollTo({
-        left: targetLeft,
-        behavior: reduce ? "auto" : "smooth"
-      });
-      [...dots.children].forEach((d,idx)=>d.setAttribute("aria-current",idx===cur));
+      track.style.transition = (animate && !reduce) ? "transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)" : "none";
+      track.style.transform = `translateX(-${cur * 100}%)`;
+      updateDots();
     }
 
-    let scrollTimeout;
-    track.addEventListener("scroll",()=>{
-      clearTimeout(scrollTimeout);
-      scrollTimeout=setTimeout(syncDots, 50);
-    },{passive:true});
+    let startX=0, startY=0, currentX=0, isDown=false, isHorizontal=null;
+
+    function startSwipe(x, y){
+      isDown=true;
+      startX=x;
+      startY=y;
+      currentX=x;
+      isHorizontal=null;
+      track.style.transition="none";
+    }
+
+    function moveSwipe(x, y, cancelable, e){
+      if(!isDown) return;
+      currentX=x;
+      const dx=currentX - startX;
+      const dy=y - startY;
+
+      if(isHorizontal===null){
+        if(Math.abs(dx)>8 || Math.abs(dy)>8){
+          isHorizontal=Math.abs(dx) > Math.abs(dy);
+        }
+      }
+
+      if(isHorizontal){
+        if(cancelable && e && e.cancelable) e.preventDefault();
+        track.style.transform=`translateX(calc(-${cur * 100}% + ${dx}px))`;
+      }
+    }
+
+    function endSwipe(){
+      if(!isDown) return;
+      isDown=false;
+      const dx=currentX - startX;
+      if(isHorizontal && Math.abs(dx)>45){
+        if(dx < 0) go(cur + 1);
+        else go(cur - 1);
+      } else {
+        go(cur);
+      }
+      isHorizontal=null;
+    }
+
+    track.addEventListener("touchstart", e=>{
+      if(e.touches.length===1) startSwipe(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:true});
+
+    track.addEventListener("touchmove", e=>{
+      if(e.touches.length===1) moveSwipe(e.touches[0].clientX, e.touches[0].clientY, true, e);
+    }, {passive:false});
+
+    track.addEventListener("touchend", endSwipe, {passive:true});
+    track.addEventListener("touchcancel", endSwipe, {passive:true});
+
+    track.addEventListener("mousedown", e=>{
+      if(e.button===0) startSwipe(e.clientX, e.clientY);
+    });
+    window.addEventListener("mousemove", e=>{
+      if(isDown) moveSwipe(e.clientX, e.clientY, false, null);
+    });
+    window.addEventListener("mouseup", endSwipe);
 
     const prevBtn=$("#prev"), nextBtn=$("#next");
-    if(prevBtn) prevBtn.addEventListener("click",()=>go(cur-1));
-    if(nextBtn) nextBtn.addEventListener("click",()=>go(cur+1));
-    addEventListener("resize", syncDots);
-    syncDots();
+    if(prevBtn) prevBtn.addEventListener("click",()=>go(cur - 1));
+    if(nextBtn) nextBtn.addEventListener("click",()=>go(cur + 1));
+
+    track.setAttribute("tabindex","0");
+    track.addEventListener("keydown", e=>{
+      if(e.key==="ArrowLeft") go(cur - 1);
+      if(e.key==="ArrowRight") go(cur + 1);
+    });
+
+    go(0, false);
   }
 
   /* ================= Events ================= */
