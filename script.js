@@ -275,10 +275,13 @@
     setTimeout(()=>{
       screen.classList.add("gone");
       document.body.classList.remove("locked");
-      document.querySelectorAll(".hero-inner > *").forEach((el,i)=>{el.style.animationDelay=(i*0.08)+"s";el.classList.add("reveal-in");});
+      document.querySelectorAll(".hero-inner > *").forEach((el,i)=>{
+        el.style.animationDelay=(0.2 + i*0.08)+"s";
+        el.classList.add("reveal-in");
+      });
       sizeScratch();
-      setTimeout(()=>{dustOn=false;},1200);
-    }, reduce ? 50 : 2900);
+      setTimeout(()=>{dustOn=false;},1400);
+    }, reduce ? 50 : 3100);
   }
   env.addEventListener("click", openEnvelope);
   screen.addEventListener("click", openEnvelope);

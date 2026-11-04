@@ -237,13 +237,16 @@ section {
     radial-gradient(60% 45% at 30% 100%, rgba(244, 205, 176, .5), transparent 70%),
     radial-gradient(50% 40% at 95% 95%, rgba(181, 205, 183, .45), transparent 70%);
   background-size: 512px 512px, 512px 512px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
-  transition: opacity 1.1s ease, visibility 1.1s, transform 1.4s cubic-bezier(.5, 0, .2, 1) cursor: pointer;
+  cursor: pointer;
+  transition: opacity 1.3s cubic-bezier(.4, 0, .2, 1), transform 1.5s cubic-bezier(.25, 1, .5, 1), visibility 0s linear 1.3s;
+  will-change: opacity, transform;
 }
 
 #envelope-screen.gone {
   opacity: 0;
   visibility: hidden;
-  transform: scale(1.06)
+  transform: scale(1.08);
+  pointer-events: none;
 }
 
 #envelope-screen .wash {
@@ -799,7 +802,15 @@ section {
 /* ================= Hero ================= */
 .hero {
   padding-top: 0;
-  padding-bottom: 50px
+  padding-bottom: 50px;
+  transition: opacity 1.3s cubic-bezier(.2, .8, .2, 1), transform 1.5s cubic-bezier(.2, .8, .2, 1);
+  will-change: opacity, transform;
+}
+
+body.locked .hero {
+  opacity: 0.6;
+  transform: scale(0.97) translateY(16px);
+  pointer-events: none;
 }
 
 .hero-art {
