@@ -916,6 +916,32 @@ section {
   color: #8C6A28;
 }
 
+.gc-events {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 2px auto 14px;
+  padding: 5px 16px;
+  border-radius: 999px;
+  background: rgba(176, 138, 69, .08);
+  border: 1px solid var(--gold-soft);
+  font-family: var(--caps);
+  font-size: clamp(.68rem, 2.4vw, .76rem);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.gc-events b {
+  color: var(--gold-deep);
+  font-weight: 600;
+}
+
+.gc-events[hidden] {
+  display: none !important;
+}
+
 .gc-note {
   font-family: var(--caps);
   font-size: clamp(.62rem, 2.2vw, .70rem);

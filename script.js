@@ -9,10 +9,10 @@
     whatsapp:"919725956266"
   };
   const EVENTS = [
-    {name:"Mehendi",img:"img/mehendi.webp",wash:"img/wash-blush.webp",day:"Wednesday",date:"9th December",short:"9 Dec",time:"6:00 PM",venue:"Groom & Bride Residences",dress:"",sw:[],alt:"Watercolour of the bride and her friends applying mehendi among marigolds and roses"},
-    {name:"Haldi",img:"img/haldi.webp",wash:"img/wash-peach.webp",day:"Tuesday",date:"15th December",short:"15 Dec",time:"9:00 AM",venue:"Poolside, Ravaya",dress:"Yellows and florals",sw:["#E9C46A","#F4CDB0"],alt:"Watercolour of the couple at a brass urli with haldi, parasols and marigolds"},
-    {name:"Wedding",img:"img/wedding.webp",wash:"img/wash-blush2.webp",day:"Tuesday",date:"15th December",short:"15 Dec",time:"6:00 PM",venue:"The Lawn, Ravaya",dress:"Traditional, pastels welcome",sw:["#EDB8C0","#FBF8F4"],alt:"Watercolour of the couple before a red floral mandap with brass lamps"},
-    {name:"Reception",img:"img/reception.webp",wash:"img/wash-lavender.webp",day:"Thursday",date:"17th December",short:"17 Dec",time:"7:00 PM",venue:"Turquoise Banquet, Ravaya",dress:"Black tie, Indian formal",sw:["#3D3957","#B08A45"],alt:"Watercolour of the couple dancing under chandeliers framed by wisteria and pearls"}
+    {name:"Mehendi",key:"mehendi",img:"img/mehendi.webp",wash:"img/wash-blush.webp",day:"Wednesday",date:"9th December",short:"9 Dec",time:"6:00 PM",venue:"Residences",dress:"",sw:[],alt:"Watercolour of the bride and her friends applying mehendi among marigolds and roses"},
+    {name:"Haldi",key:"haldi",img:"img/haldi.webp",wash:"img/wash-peach.webp",day:"Thursday",date:"10th December",short:"10 Dec",time:"10:00 AM",venue:"Dhanush Villa, Surat",dress:"Traditional, pastels welcome",sw:["#E9C46A","#F4CDB0"],alt:"Watercolour of the couple at a brass urli with haldi, parasols and marigolds"},
+    {name:"Reception",key:"reception",img:"img/reception.webp",wash:"img/wash-lavender.webp",day:"Thursday",date:"10th December",short:"10 Dec",time:"6:00 PM",venue:"Rosmarinus Restro, Surat",dress:"Festive Attire",sw:["#3D3957","#B08A45"],alt:"Watercolour of the couple dancing under chandeliers framed by wisteria and pearls"},
+    {name:"Wedding",key:"wedding",img:"img/wedding.webp",wash:"img/wash-blush2.webp",day:"Friday",date:"11th December",short:"11 Dec",time:"6:00 PM",venue:"Viththalbapa Farm House, Surat",dress:"Wedding Festivities",sw:["#EDB8C0","#FBF8F4"],alt:"Watercolour of the couple before a red floral mandap with brass lamps"}
   ];
   const STORY = [
     {img:"img/story1.webp",cap:"We found our home",when:"San Jose · 2019",pos:"50% 62%"},
@@ -27,6 +27,22 @@
 
   /* ================= Dynamic Guest Invitation ================= */
   let guestInfo = null;
+  const chronologicalOrder = ["mehendi", "haldi", "reception", "wedding"];
+  const eventNameMap = {
+    mehendi: "Mehendi",
+    haldi: "Haldi",
+    reception: "Reception",
+    wedding: "Wedding"
+  };
+  function formatEventNames(keys) {
+    if (!keys || !keys.length) return "";
+    const sorted = [...keys].sort((a, b) => chronologicalOrder.indexOf(a) - chronologicalOrder.indexOf(b));
+    const names = sorted.map(k => eventNameMap[k] || k);
+    if (names.length === 1) return names[0];
+    if (names.length === 2) return `${names[0]} & ${names[1]}`;
+    return `${names.slice(0, -1).join(", ")} & ${names[names.length - 1]}`;
+  }
+
   try {
     const params = new URLSearchParams(window.location.search);
     const rawTo = (params.get("to") || params.get("name") || params.get("guest") || "").trim();
@@ -54,26 +70,52 @@
       rawGuests.toLowerCase() === "family"
     );
 
-    if (rawTo || isFamily || numGuests !== null) {
+    // Parse invited events (e.g. ?events=haldi,reception or ?event=wedding)
+    const rawEventsList = [...params.getAll("events"), ...params.getAll("event")].join(",").toLowerCase().trim();
+    let invitedEvents = null; // null means all events
+    if (rawEventsList && rawEventsList !== "all" && rawEventsList !== "full") {
+      const parts = rawEventsList.split(/[,+|]/).map(s => s.trim().replace(/^['"]|['"]$/g, ""));
+      const validMap = {
+        "mehendi": "mehendi", "mehndi": "mehendi", "rang": "mehendi", "m": "mehendi",
+        "haldi": "haldi", "pithi": "haldi", "petals": "haldi", "h": "haldi",
+        "reception": "reception", "jashn": "reception", "r": "reception",
+        "wedding": "wedding", "phere": "wedding", "shaadi": "wedding", "shadi": "wedding", "w": "wedding"
+      };
+      const matched = new Set();
+      parts.forEach(p => {
+        if (validMap[p]) matched.add(validMap[p]);
+      });
+      if (matched.size > 0 && matched.size < 4) {
+        invitedEvents = [...matched];
+      }
+    }
+
+    if (rawTo || isFamily || numGuests !== null || invitedEvents !== null) {
       guestInfo = {
         to: rawTo,
         isFamily: isFamily,
-        count: numGuests
+        count: numGuests,
+        events: invitedEvents
       };
+
+      const eventsFormatted = invitedEvents ? formatEventNames(invitedEvents) : "";
 
       // 1. Envelope Cover Tag
       const envTag = $("#env-guest-tag");
       if (envTag) {
         envTag.hidden = false;
+        const eventsSuffix = eventsFormatted ? ` · ${eventsFormatted}` : "";
         if (guestInfo.isFamily) {
           const hasFam = /family/i.test(guestInfo.to);
           const toFormatted = guestInfo.to ? (hasFam ? esc(guestInfo.to) + " · " : esc(guestInfo.to) + " &amp; ") : "";
-          envTag.innerHTML = `<span>Special Invitation:</span> <b>${toFormatted}Full Family</b>`;
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${toFormatted}Full Family${eventsSuffix}</b>`;
         } else if (guestInfo.count) {
           const label = guestInfo.count === 1 ? "1 Member" : `${guestInfo.count} Members`;
-          envTag.innerHTML = `<span>Special Invitation:</span> <b>${guestInfo.to ? esc(guestInfo.to) + " · " : ""}${label}</b>`;
-        } else {
-          envTag.innerHTML = `<span>Special Invitation:</span> <b>${esc(guestInfo.to)}</b>`;
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${guestInfo.to ? esc(guestInfo.to) + " · " : ""}${label}${eventsSuffix}</b>`;
+        } else if (guestInfo.to) {
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${esc(guestInfo.to)}${eventsSuffix}</b>`;
+        } else if (eventsFormatted) {
+          envTag.innerHTML = `<span>Special Invitation:</span> <b>${eventsFormatted}</b>`;
         }
       }
 
@@ -81,12 +123,24 @@
       const letterGuest = $("#letter-guest");
       if (letterGuest) {
         letterGuest.hidden = false;
-        if (guestInfo.isFamily) {
-          letterGuest.textContent = "✦ Full Family Invited (સપરિવાર) ✦";
-        } else if (guestInfo.count) {
-          letterGuest.textContent = `✦ ${guestInfo.count} ${guestInfo.count === 1 ? 'Member' : 'Members'} Invited ✦`;
+        if (eventsFormatted) {
+          if (guestInfo.isFamily) {
+            letterGuest.textContent = `✦ Full Family Invited · ${eventsFormatted} ✦`;
+          } else if (guestInfo.count) {
+            letterGuest.textContent = `✦ ${guestInfo.count} ${guestInfo.count === 1 ? 'Member' : 'Members'} · ${eventsFormatted} ✦`;
+          } else if (guestInfo.to) {
+            letterGuest.textContent = `✦ ${guestInfo.to} · ${eventsFormatted} ✦`;
+          } else {
+            letterGuest.textContent = `✦ Cordially Invited: ${eventsFormatted} ✦`;
+          }
         } else {
-          letterGuest.textContent = `✦ Cordially Invited: ${guestInfo.to} ✦`;
+          if (guestInfo.isFamily) {
+            letterGuest.textContent = "✦ Full Family Invited (સપરિવાર) ✦";
+          } else if (guestInfo.count) {
+            letterGuest.textContent = `✦ ${guestInfo.count} ${guestInfo.count === 1 ? 'Member' : 'Members'} Invited ✦`;
+          } else {
+            letterGuest.textContent = `✦ Cordially Invited: ${guestInfo.to} ✦`;
+          }
         }
       }
 
@@ -98,27 +152,66 @@
         const gcName = $("#gc-name");
         const gcMsg = $("#gc-msg");
         const gcNote = $("#gc-note");
+        const gcEvents = $("#gc-events");
+
+        if (gcEvents && eventsFormatted) {
+          gcEvents.hidden = false;
+          gcEvents.innerHTML = `<span>Invited For:</span> <b>${eventsFormatted}</b>`;
+        }
 
         if (guestInfo.isFamily) {
-          if (gcBadge) gcBadge.textContent = "✦ Cordially Invited With Family ✦";
+          if (gcBadge) gcBadge.textContent = eventsFormatted ? `✦ Invited With Family · ${eventsFormatted} ✦` : "✦ Cordially Invited With Family ✦";
           const hasFam = /family/i.test(guestInfo.to);
           const salutation = guestInfo.to 
             ? `Dear ${guestInfo.to}${hasFam ? "" : " & Family"},` 
             : "Dear Family & Loved Ones,";
           if (gcName) gcName.textContent = salutation;
-          if (gcMsg) gcMsg.innerHTML = "Our celebration is complete with your blessings. We warmly invite your <b>entire family</b> to join us and celebrate Mayur &amp; Krina's wedding.";
-          if (gcNote) gcNote.textContent = "સપરિવાર પધારવા હાર્દિક નિમંત્રણ · Full Family Invited";
+          const celebrationTarget = eventsFormatted ? `for the <b>${eventsFormatted}</b> celebrations` : "and celebrate Mayur &amp; Krina's wedding";
+          if (gcMsg) gcMsg.innerHTML = `Our celebration is complete with your blessings. We warmly invite your <b>entire family</b> to join us ${celebrationTarget}.`;
+          if (gcNote) gcNote.textContent = eventsFormatted ? `સપરિવાર પધારવા હાર્દિક નિમંત્રણ · ${eventsFormatted}` : "સપરિવાર પધારવા હાર્દિક નિમંત્રણ · Full Family Invited";
         } else if (guestInfo.count) {
           const countText = guestInfo.count === 1 ? "1 member" : `${guestInfo.count} members`;
-          if (gcBadge) gcBadge.textContent = `✦ Special Invitation · ${guestInfo.count === 1 ? '1 Member' : guestInfo.count + ' Members'} ✦`;
+          if (gcBadge) gcBadge.textContent = eventsFormatted ? `✦ Special Invitation · ${eventsFormatted} ✦` : `✦ Special Invitation · ${guestInfo.count === 1 ? '1 Member' : guestInfo.count + ' Members'} ✦`;
           if (gcName) gcName.textContent = guestInfo.to ? `Dear ${guestInfo.to},` : "Dear Guests,";
-          if (gcMsg) gcMsg.innerHTML = `We request the pleasure of your company and warmly invite <b>${countText} from your family</b> to celebrate our special day with us.`;
+          const celebrationTarget = eventsFormatted ? `the <b>${eventsFormatted}</b> celebrations` : "our special day";
+          if (gcMsg) gcMsg.innerHTML = `We request the pleasure of your company and warmly invite <b>${countText} from your family</b> to celebrate ${celebrationTarget} with us.`;
           if (gcNote) gcNote.textContent = "Mayur & Krina look forward to celebrating together";
         } else {
-          if (gcBadge) gcBadge.textContent = "✦ Special Invitation ✦";
-          if (gcName) gcName.textContent = `Dear ${guestInfo.to},`;
-          if (gcMsg) gcMsg.innerHTML = "We request the pleasure of your company to celebrate the wedding of Mayur &amp; Krina.";
+          if (gcBadge) gcBadge.textContent = eventsFormatted ? `✦ Special Invitation · ${eventsFormatted} ✦` : "✦ Special Invitation ✦";
+          if (gcName) gcName.textContent = guestInfo.to ? `Dear ${guestInfo.to},` : "Dear Guests,";
+          const celebrationTarget = eventsFormatted ? `the <b>${eventsFormatted}</b> celebrations` : "the wedding of Mayur &amp; Krina";
+          if (gcMsg) gcMsg.innerHTML = `We request the pleasure of your company to celebrate ${celebrationTarget} with us.`;
           if (gcNote) gcNote.textContent = "Mayur & Krina look forward to celebrating together";
+        }
+      }
+
+      // 4. Filter Schedule of Events (only show invited events!)
+      if (invitedEvents && invitedEvents.length > 0) {
+        const eventArticles = document.querySelectorAll("#events-list .event");
+        let visibleCount = 0;
+        eventArticles.forEach(art => {
+          const evKey = (art.getAttribute("data-event") || "").toLowerCase().trim();
+          if (evKey && !invitedEvents.includes(evKey)) {
+            art.hidden = true;
+            art.style.display = "none";
+          } else {
+            art.hidden = false;
+            art.style.display = "";
+            visibleCount++;
+          }
+        });
+
+        const eyebrow = $("#events-eyebrow");
+        if (eyebrow) {
+          const wordMap = {
+            1: "One celebration, one forever",
+            2: "Two celebrations, one forever",
+            3: "Three celebrations, one forever",
+            4: "Four celebrations, one forever"
+          };
+          if (wordMap[visibleCount]) {
+            eyebrow.textContent = wordMap[visibleCount];
+          }
         }
       }
     }
@@ -344,6 +437,10 @@
   const chk=$("#r-events");
   if(chk){
     EVENTS.forEach((ev,i)=>{
+      const evKey = (ev.key || ev.name).toLowerCase();
+      if (guestInfo && guestInfo.events && !guestInfo.events.includes(evKey)) {
+        return;
+      }
       const l=document.createElement("label");
       l.innerHTML=`<input type="checkbox" id="ev-${i}" value="${ev.name}" checked> ${ev.name} <span>${ev.short}</span>`;
       chk.appendChild(l);
@@ -377,7 +474,8 @@
       const rYes=$("#r-yes");
       const yes=rYes ? rYes.checked : true;
       const evs=chk ? [...chk.querySelectorAll("input:checked")].map(i=>i.value) : [];
-      const inviteNote = guestInfo ? (guestInfo.isFamily ? " (Full Family)" : (guestInfo.count ? ` (${guestInfo.count} members invited)` : "")) : "";
+      const eventInviteNote = guestInfo && guestInfo.events ? ` [${formatEventNames(guestInfo.events)}]` : "";
+      const inviteNote = guestInfo ? (guestInfo.isFamily ? ` (Full Family${eventInviteNote})` : (guestInfo.count ? ` (${guestInfo.count} members invited${eventInviteNote})` : eventInviteNote)) : "";
       const msg = yes
         ? `RSVP for ${WEDDING.couple[0]} & ${WEDDING.couple[1]}'s wedding\n\nName: ${name}\nAttending: Joyfully accept${inviteNote}\nGuests: ${guests}\nEvents: ${evs.length?evs.join(", "):"None selected"}`
         : `RSVP for ${WEDDING.couple[0]} & ${WEDDING.couple[1]}'s wedding\n\nName: ${name}\nAttending: Regretfully decline\nSending our love and blessings.`;
