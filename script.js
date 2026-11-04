@@ -192,52 +192,48 @@
       dots.appendChild(b);
     });
     let cur=0;
-    let animating=false;
-    let animTimer=null;
+
+    function getSlidePos(i){
+      if(!slides[i] || !slides[0]) return 0;
+      return slides[i].offsetLeft - slides[0].offsetLeft;
+    }
+
     function syncDots(){
-      if(animating) return;
-      const w=track.clientWidth||1;
-      cur=Math.min(slides.length-1, Math.max(0, Math.round(track.scrollLeft/w)));
+      const scrollPos = track.scrollLeft;
+      let closest = 0;
+      let minDiff = Infinity;
+      slides.forEach((s, i) => {
+        const diff = Math.abs(getSlidePos(i) - scrollPos);
+        if(diff < minDiff){
+          minDiff = diff;
+          closest = i;
+        }
+      });
+      cur = closest;
       [...dots.children].forEach((d,i)=>d.setAttribute("aria-current",i===cur));
     }
+
     function go(i){
       if(!slides.length) return;
       cur=(i+slides.length)%slides.length;
-      const targetLeft=slides[cur].offsetLeft;
-      const start=track.scrollLeft;
-      const diff=targetLeft-start;
-      
-      track.style.scrollSnapType='none';
-      if(reduce || Math.abs(diff)<2){
-        track.scrollLeft=targetLeft;
-        track.style.scrollSnapType='';
-        [...dots.children].forEach((d,idx)=>d.setAttribute("aria-current",idx===cur));
-        return;
-      }
-      
-      animating=true;
-      clearInterval(animTimer);
-      const startTime=Date.now();
-      const duration=280;
-      
-      animTimer=setInterval(()=>{
-        const elapsed=Date.now()-startTime;
-        const p=Math.min(elapsed/duration,1);
-        const ease=p<0.5 ? 4*p*p*p : 1-Math.pow(-2*p+2,3)/2;
-        track.scrollLeft=Math.round(start+diff*ease);
-        if(p>=1){
-          clearInterval(animTimer);
-          track.scrollLeft=targetLeft;
-          track.style.scrollSnapType='';
-          animating=false;
-          [...dots.children].forEach((d,idx)=>d.setAttribute("aria-current",idx===cur));
-        }
-      }, 16);
+      const targetLeft = getSlidePos(cur);
+      track.scrollTo({
+        left: targetLeft,
+        behavior: reduce ? "auto" : "smooth"
+      });
+      [...dots.children].forEach((d,idx)=>d.setAttribute("aria-current",idx===cur));
     }
-    track.addEventListener("scroll",()=>{clearTimeout(track._t);track._t=setTimeout(syncDots,60);},{passive:true});
+
+    let scrollTimeout;
+    track.addEventListener("scroll",()=>{
+      clearTimeout(scrollTimeout);
+      scrollTimeout=setTimeout(syncDots, 50);
+    },{passive:true});
+
     const prevBtn=$("#prev"), nextBtn=$("#next");
     if(prevBtn) prevBtn.addEventListener("click",()=>go(cur-1));
     if(nextBtn) nextBtn.addEventListener("click",()=>go(cur+1));
+    addEventListener("resize", syncDots);
     syncDots();
   }
 

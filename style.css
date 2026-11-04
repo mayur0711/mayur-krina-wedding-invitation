@@ -982,7 +982,10 @@ body.locked .hero-art,
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scrollbar-width: none
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
 }
 
 .track::-webkit-scrollbar {
@@ -1002,16 +1005,33 @@ body.locked .hero-art,
 .slide .photo {
   position: relative;
   aspect-ratio: 4/5;
-  width: 100%
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #F4EBE1;
+  box-shadow: 0 14px 34px rgba(61, 57, 87, .13), 0 2px 8px rgba(176, 138, 69, .15);
+  border: 1px solid rgba(216, 191, 138, .6);
+  padding: 5px;
+}
+
+.slide .photo::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 248, 230, .6);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .slide .photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 20%;
   display: block;
-  -webkit-mask-image: radial-gradient(closest-side, #000 62%, rgba(0, 0, 0, .55) 82%, transparent 100%);
-  mask-image: radial-gradient(closest-side, #000 62%, rgba(0, 0, 0, .55) 82%, transparent 100%)
+  border-radius: 15px;
+  transition: transform .4s ease;
 }
 
 .slide figcaption {
@@ -1084,17 +1104,20 @@ body.locked .hero-art,
 }
 
 .dots button {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   border: 0;
   padding: 0;
   background: var(--gold-soft);
   opacity: .45;
-  cursor: pointer
+  cursor: pointer;
+  transition: width .3s ease, background .3s ease, opacity .3s ease, border-radius .3s ease;
 }
 
 .dots button[aria-current="true"] {
+  width: 22px;
+  border-radius: 4px;
   opacity: 1;
   background: var(--gold)
 }
