@@ -181,102 +181,148 @@
   const dirLink=$("#dir-link"); if(dirLink) dirLink.href="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(WEDDING.mapQuery);
 
   /* ================= Story ================= */
-  const track=$("#track"), dots=$("#dots");
+  const track = $("#track"), dots = $("#dots");
   if(track && dots){
-    const slides=[...track.querySelectorAll(".slide")];
-    dots.innerHTML="";
-    slides.forEach((s,i)=>{
-      const b=document.createElement("button");
-      b.setAttribute("aria-label","Photo "+(i+1));
-      b.addEventListener("click",()=>go(i));
+    const slides = [...track.querySelectorAll(".slide")];
+    dots.innerHTML = "";
+    slides.forEach((s, i) => {
+      const b = document.createElement("button");
+      b.setAttribute("aria-label", "Photo " + (i + 1));
+      b.addEventListener("click", () => go(i));
       dots.appendChild(b);
     });
-    let cur=0;
+
+    let cur = 0;
+    let isTransitioning = false;
 
     function updateDots(){
-      [...dots.children].forEach((d,i)=>d.setAttribute("aria-current",i===cur));
+      [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === cur));
     }
 
-    function go(i, animate=true){
-      if(!slides.length) return;
-      cur=(i+slides.length)%slides.length;
-      track.style.transition = (animate && !reduce) ? "transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)" : "none";
-      track.style.transform = `translateX(-${cur * 100}%)`;
+    function go(nextIdx, direction){
+      if(!slides.length || isTransitioning) return;
+      const next = (nextIdx + slides.length) % slides.length;
+      if(next === cur && slides[cur].classList.contains("active")) return;
+
+      if(!direction){
+        direction = next >= cur ? "next" : "prev";
+        if(cur === slides.length - 1 && next === 0) direction = "next";
+        if(cur === 0 && next === slides.length - 1) direction = "prev";
+      }
+
+      isTransitioning = true;
+      const currentSlide = slides[cur];
+      const nextSlide = slides[next];
+
+      // Prepare next slide position before animating
+      nextSlide.style.transition = "none";
+      nextSlide.classList.remove("active", "prev-out", "next-out");
+      nextSlide.classList.add(direction === "next" ? "next-out" : "prev-out");
+
+      // Force layout reflow
+      void nextSlide.offsetWidth;
+
+      // Animate both
+      nextSlide.style.transition = "";
+      currentSlide.style.transition = "";
+
+      currentSlide.classList.remove("active");
+      currentSlide.classList.add(direction === "next" ? "prev-out" : "next-out");
+
+      nextSlide.classList.remove("prev-out", "next-out");
+      nextSlide.classList.add("active");
+
+      cur = next;
       updateDots();
+
+      setTimeout(() => {
+        isTransitioning = false;
+        slides.forEach((s, idx) => {
+          if(idx !== cur) {
+            s.classList.remove("active", "prev-out", "next-out");
+            s.style.transition = "";
+          }
+        });
+      }, 520);
     }
 
-    let startX=0, startY=0, currentX=0, isDown=false, isHorizontal=null;
+    // Touch swipe support
+    let startX = 0, startY = 0, currentX = 0, isDown = false, isHorizontal = null;
 
-    function startSwipe(x, y){
-      isDown=true;
-      startX=x;
-      startY=y;
-      currentX=x;
-      isHorizontal=null;
-      track.style.transition="none";
-    }
+    track.addEventListener("touchstart", e => {
+      if(e.touches.length !== 1 || isTransitioning) return;
+      isDown = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      currentX = startX;
+      isHorizontal = null;
+    }, { passive: true });
 
-    function moveSwipe(x, y, cancelable, e){
-      if(!isDown) return;
-      currentX=x;
-      const dx=currentX - startX;
-      const dy=y - startY;
+    track.addEventListener("touchmove", e => {
+      if(!isDown || e.touches.length !== 1) return;
+      currentX = e.touches[0].clientX;
+      const dx = currentX - startX;
+      const dy = e.touches[0].clientY - startY;
 
-      if(isHorizontal===null){
-        if(Math.abs(dx)>8 || Math.abs(dy)>8){
-          isHorizontal=Math.abs(dx) > Math.abs(dy);
+      if(isHorizontal === null){
+        if(Math.abs(dx) > 8 || Math.abs(dy) > 8){
+          isHorizontal = Math.abs(dx) > Math.abs(dy);
         }
       }
 
       if(isHorizontal){
-        if(cancelable && e && e.cancelable) e.preventDefault();
-        track.style.transform=`translateX(calc(-${cur * 100}% + ${dx}px))`;
+        if(e.cancelable) e.preventDefault();
+        const activeSlide = slides[cur];
+        if(activeSlide){
+          activeSlide.style.transition = "none";
+          activeSlide.style.transform = `translateX(${dx * 0.35}px)`;
+          activeSlide.style.opacity = Math.max(0.4, 1 - Math.abs(dx) / 300);
+        }
       }
-    }
+    }, { passive: false });
 
     function endSwipe(){
       if(!isDown) return;
-      isDown=false;
-      const dx=currentX - startX;
-      if(isHorizontal && Math.abs(dx)>45){
-        if(dx < 0) go(cur + 1);
-        else go(cur - 1);
-      } else {
-        go(cur);
+      isDown = false;
+      const dx = currentX - startX;
+      const activeSlide = slides[cur];
+      if(activeSlide){
+        activeSlide.style.transition = "";
+        activeSlide.style.transform = "";
+        activeSlide.style.opacity = "";
       }
-      isHorizontal=null;
+
+      if(isHorizontal && Math.abs(dx) > 35){
+        if(dx < 0){
+          go(cur + 1, "next");
+        } else {
+          go(cur - 1, "prev");
+        }
+      }
+      isHorizontal = null;
     }
 
-    track.addEventListener("touchstart", e=>{
-      if(e.touches.length===1) startSwipe(e.touches[0].clientX, e.touches[0].clientY);
-    }, {passive:true});
+    track.addEventListener("touchend", endSwipe, { passive: true });
+    track.addEventListener("touchcancel", endSwipe, { passive: true });
 
-    track.addEventListener("touchmove", e=>{
-      if(e.touches.length===1) moveSwipe(e.touches[0].clientX, e.touches[0].clientY, true, e);
-    }, {passive:false});
+    // Prev / Next buttons
+    const prevBtn = $("#prev"), nextBtn = $("#next");
+    if(prevBtn) prevBtn.addEventListener("click", () => go(cur - 1, "prev"));
+    if(nextBtn) nextBtn.addEventListener("click", () => go(cur + 1, "next"));
 
-    track.addEventListener("touchend", endSwipe, {passive:true});
-    track.addEventListener("touchcancel", endSwipe, {passive:true});
-
-    track.addEventListener("mousedown", e=>{
-      if(e.button===0) startSwipe(e.clientX, e.clientY);
-    });
-    window.addEventListener("mousemove", e=>{
-      if(isDown) moveSwipe(e.clientX, e.clientY, false, null);
-    });
-    window.addEventListener("mouseup", endSwipe);
-
-    const prevBtn=$("#prev"), nextBtn=$("#next");
-    if(prevBtn) prevBtn.addEventListener("click",()=>go(cur - 1));
-    if(nextBtn) nextBtn.addEventListener("click",()=>go(cur + 1));
-
-    track.setAttribute("tabindex","0");
-    track.addEventListener("keydown", e=>{
-      if(e.key==="ArrowLeft") go(cur - 1);
-      if(e.key==="ArrowRight") go(cur + 1);
+    // Keyboard navigation
+    track.setAttribute("tabindex", "0");
+    track.addEventListener("keydown", e => {
+      if(e.key === "ArrowLeft") go(cur - 1, "prev");
+      if(e.key === "ArrowRight") go(cur + 1, "next");
     });
 
-    go(0, false);
+    // Initialize slide 0 as active
+    slides.forEach((s, idx) => {
+      s.classList.remove("active", "prev-out", "next-out");
+      if(idx === 0) s.classList.add("active");
+    });
+    updateDots();
   }
 
   /* ================= Events ================= */
