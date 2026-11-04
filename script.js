@@ -193,136 +193,51 @@
     });
 
     let cur = 0;
-    let isTransitioning = false;
 
-    function updateDots(){
+    function getSlidePos(i){
+      if(!slides[i] || !slides[0]) return 0;
+      return slides[i].offsetLeft - slides[0].offsetLeft;
+    }
+
+    function syncDots(){
+      const scrollPos = track.scrollLeft;
+      let closest = 0;
+      let minDiff = Infinity;
+      slides.forEach((s, i) => {
+        const diff = Math.abs(getSlidePos(i) - scrollPos);
+        if(diff < minDiff){
+          minDiff = diff;
+          closest = i;
+        }
+      });
+      cur = closest;
       [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === cur));
     }
 
-    function go(nextIdx, direction){
-      if(!slides.length || isTransitioning) return;
-      const next = (nextIdx + slides.length) % slides.length;
-      if(next === cur && slides[cur].classList.contains("active")) return;
-
-      if(!direction){
-        direction = next >= cur ? "next" : "prev";
-        if(cur === slides.length - 1 && next === 0) direction = "next";
-        if(cur === 0 && next === slides.length - 1) direction = "prev";
-      }
-
-      isTransitioning = true;
-      const currentSlide = slides[cur];
-      const nextSlide = slides[next];
-
-      // Prepare next slide position before animating
-      nextSlide.style.transition = "none";
-      nextSlide.classList.remove("active", "prev-out", "next-out");
-      nextSlide.classList.add(direction === "next" ? "next-out" : "prev-out");
-
-      // Force layout reflow
-      void nextSlide.offsetWidth;
-
-      // Animate both
-      nextSlide.style.transition = "";
-      currentSlide.style.transition = "";
-
-      currentSlide.classList.remove("active");
-      currentSlide.classList.add(direction === "next" ? "prev-out" : "next-out");
-
-      nextSlide.classList.remove("prev-out", "next-out");
-      nextSlide.classList.add("active");
-
-      cur = next;
-      updateDots();
-
-      setTimeout(() => {
-        isTransitioning = false;
-        slides.forEach((s, idx) => {
-          if(idx !== cur) {
-            s.classList.remove("active", "prev-out", "next-out");
-            s.style.transition = "";
-          }
-        });
-      }, 520);
+    function go(i){
+      if(!slides.length) return;
+      cur = (i + slides.length) % slides.length;
+      const targetLeft = getSlidePos(cur);
+      track.scrollTo({
+        left: targetLeft,
+        behavior: reduce ? "auto" : "smooth"
+      });
+      [...dots.children].forEach((d, idx) => d.setAttribute("aria-current", idx === cur));
     }
 
-    // Touch swipe support
-    let startX = 0, startY = 0, currentX = 0, isDown = false, isHorizontal = null;
-
-    track.addEventListener("touchstart", e => {
-      if(e.touches.length !== 1 || isTransitioning) return;
-      isDown = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      currentX = startX;
-      isHorizontal = null;
+    let scrollTimeout;
+    track.addEventListener("scroll", () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(syncDots, 50);
     }, { passive: true });
-
-    track.addEventListener("touchmove", e => {
-      if(!isDown || e.touches.length !== 1) return;
-      currentX = e.touches[0].clientX;
-      const dx = currentX - startX;
-      const dy = e.touches[0].clientY - startY;
-
-      if(isHorizontal === null){
-        if(Math.abs(dx) > 8 || Math.abs(dy) > 8){
-          isHorizontal = Math.abs(dx) > Math.abs(dy);
-        }
-      }
-
-      if(isHorizontal){
-        if(e.cancelable) e.preventDefault();
-        const activeSlide = slides[cur];
-        if(activeSlide){
-          activeSlide.style.transition = "none";
-          activeSlide.style.transform = `translateX(${dx * 0.35}px)`;
-          activeSlide.style.opacity = Math.max(0.4, 1 - Math.abs(dx) / 300);
-        }
-      }
-    }, { passive: false });
-
-    function endSwipe(){
-      if(!isDown) return;
-      isDown = false;
-      const dx = currentX - startX;
-      const activeSlide = slides[cur];
-      if(activeSlide){
-        activeSlide.style.transition = "";
-        activeSlide.style.transform = "";
-        activeSlide.style.opacity = "";
-      }
-
-      if(isHorizontal && Math.abs(dx) > 35){
-        if(dx < 0){
-          go(cur + 1, "next");
-        } else {
-          go(cur - 1, "prev");
-        }
-      }
-      isHorizontal = null;
-    }
-
-    track.addEventListener("touchend", endSwipe, { passive: true });
-    track.addEventListener("touchcancel", endSwipe, { passive: true });
 
     // Prev / Next buttons
     const prevBtn = $("#prev"), nextBtn = $("#next");
-    if(prevBtn) prevBtn.addEventListener("click", () => go(cur - 1, "prev"));
-    if(nextBtn) nextBtn.addEventListener("click", () => go(cur + 1, "next"));
+    if(prevBtn) prevBtn.addEventListener("click", () => go(cur - 1));
+    if(nextBtn) nextBtn.addEventListener("click", () => go(cur + 1));
 
-    // Keyboard navigation
-    track.setAttribute("tabindex", "0");
-    track.addEventListener("keydown", e => {
-      if(e.key === "ArrowLeft") go(cur - 1, "prev");
-      if(e.key === "ArrowRight") go(cur + 1, "next");
-    });
-
-    // Initialize slide 0 as active
-    slides.forEach((s, idx) => {
-      s.classList.remove("active", "prev-out", "next-out");
-      if(idx === 0) s.classList.add("active");
-    });
-    updateDots();
+    addEventListener("resize", syncDots);
+    syncDots();
   }
 
   /* ================= Events ================= */

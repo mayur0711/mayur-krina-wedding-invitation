@@ -976,57 +976,30 @@ body.locked .hero-art,
   position: relative;
   margin: 34px auto 0;
   max-width: 440px;
-  width: 100%;
 }
 
 .track {
-  position: relative;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.track::-webkit-scrollbar {
+  display: none;
 }
 
 .slide {
-  grid-area: 1 / 1;
+  flex: 0 0 100%;
   width: 100%;
+  min-width: 100%;
+  scroll-snap-align: center;
   padding: 0 18px;
   box-sizing: border-box;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateX(45px);
-  transition: opacity .5s cubic-bezier(.25, 1, .5, 1),
-              transform .5s cubic-bezier(.25, 1, .5, 1),
-              visibility .5s;
-  will-change: opacity, transform;
-}
-
-.slide.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translateX(0);
-  z-index: 2;
-}
-
-.slide.prev-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateX(-45px);
-  z-index: 1;
-}
-
-.slide.next-out {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateX(45px);
-  z-index: 1;
 }
 
 .slide figure {
@@ -1044,8 +1017,8 @@ body.locked .hero-art,
   height: 100%;
   object-fit: cover;
   display: block;
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 62%, rgba(0, 0, 0, .55) 82%, transparent 100%);
-  mask-image: radial-gradient(ellipse at center, #000 62%, rgba(0, 0, 0, .55) 82%, transparent 100%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, rgba(0, 0, 0, .55) 82%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 62%, rgba(0, 0, 0, .55) 82%, transparent 100%);
 }
 
 .slide figcaption {
