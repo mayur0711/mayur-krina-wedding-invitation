@@ -298,7 +298,6 @@
   const ICON_ON = '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>';
   const ICON_OFF = '<path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/>';
   if (icon) icon.innerHTML = ICON_OFF;
-  icon.innerHTML = ICON_OFF;
   /* Harp and strings: flowing harp arpeggios over a soft string pad */
   let ac = null, playing = false, timer = null, out = null, wet = null, step = 0;
   const M = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -311,6 +310,7 @@
     const conv = ac.createConvolver(); conv.buffer = buf; wet = ac.createGain(); wet.gain.value = .35; wet.connect(conv); conv.connect(out);
   }
   function voice(parts, t, env, lp) {
+    if (!ac || !playing) return;
     const g = ac.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(env.v, t + env.a);
     if (env.hold) { g.gain.setValueAtTime(env.v, t + env.a + env.hold); g.gain.linearRampToValueAtTime(0.0001, t + env.a + env.hold + env.r); }
     else g.gain.exponentialRampToValueAtTime(0.0001, t + env.a + env.d);
@@ -322,28 +322,83 @@
   const strings = (m, t, len, v = .03) => voice([["sawtooth", M(m), .6, -7], ["sawtooth", M(m), .6, 7], ["sine", M(m), .5]], t, { a: .9, hold: Math.max(.1, len - .9), r: 1.4, v }, 1100);
   const BEAT = .3, CH = [[43, 55, 59, 62], [38, 50, 54, 57], [40, 52, 55, 59], [36, 48, 52, 55]], PAT = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 3, 4, 5, 4, 3];
   function schedule() {
+    if (!playing || !ac) return;
     const t = ac.currentTime + .06, bar = Math.floor(step / 16) % 4, i = step % 16, c = CH[bar];
-    if (i === 0) { harp(c[0], t, .12, 3.4);[c[1], c[2], c[3]].forEach(n => strings(n + 12, t, 16 * BEAT)); }
+    if (i === 0) { harp(c[0], t, .12, 3.4); [c[1], c[2], c[3]].forEach(n => strings(n + 12, t, 16 * BEAT)); }
     const tones = [c[1], c[2], c[3], c[1] + 12, c[2] + 12, c[3] + 12, c[1] + 24];
     harp(tones[PAT[i]], t, .075, 2.2);
     if (i === 0 || i === 8) { const top = [[74, 71], [69, 66], [71, 67], [67, 64]][bar][i ? 1 : 0]; harp(top + 12, t, .06, 3); }
-    step++; timer = setTimeout(schedule, BEAT * 1000);
+    step++;
+    if (playing) {
+      timer = setTimeout(schedule, BEAT * 1000);
+    }
   }
   function startMusic() {
     try {
-      ensureAudio(); ac.resume();
-      if (!playing) { playing = true; out.gain.cancelScheduledValues(ac.currentTime); out.gain.setValueAtTime(out.gain.value, ac.currentTime); out.gain.linearRampToValueAtTime(.9, ac.currentTime + 2.5); schedule(); }
-      if (btn) { btn.setAttribute("aria-pressed", "true"); btn.setAttribute("aria-label", "Pause music"); }
+      ensureAudio();
+      if (playing) return;
+      playing = true;
+      clearTimeout(timer);
+      timer = null;
+
+      const run = () => {
+        if (!playing) return;
+        try {
+          out.gain.cancelScheduledValues(0);
+          out.gain.setValueAtTime(0.001, ac.currentTime);
+          out.gain.linearRampToValueAtTime(0.85, ac.currentTime + 1.5);
+        } catch (e) {
+          out.gain.value = 0.85;
+        }
+        schedule();
+      };
+
+      if (ac.state === "suspended") {
+        ac.resume().then(run);
+      } else {
+        run();
+      }
+
+      if (btn) {
+        btn.setAttribute("aria-pressed", "true");
+        btn.setAttribute("aria-label", "Pause music");
+      }
       if (icon) icon.innerHTML = ICON_ON;
     } catch (e) { }
   }
   function stopMusic() {
-    playing = false; clearTimeout(timer);
-    if (ac) { out.gain.cancelScheduledValues(ac.currentTime); out.gain.setTargetAtTime(0, ac.currentTime, .3); }
-    if (btn) { btn.setAttribute("aria-pressed", "false"); btn.setAttribute("aria-label", "Play music"); }
+    playing = false;
+    clearTimeout(timer);
+    timer = null;
+    if (ac) {
+      try {
+        out.gain.cancelScheduledValues(0);
+        out.gain.setValueAtTime(0, ac.currentTime);
+        if (ac.state === "running") {
+          ac.suspend();
+        }
+      } catch (e) { }
+    }
+    if (btn) {
+      btn.setAttribute("aria-pressed", "false");
+      btn.setAttribute("aria-label", "Play music");
+    }
     if (icon) icon.innerHTML = ICON_OFF;
   }
-  if (btn) btn.addEventListener("click", () => playing ? stopMusic() : startMusic());
+  function toggleMusic(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (playing) {
+      stopMusic();
+    } else {
+      startMusic();
+    }
+  }
+  if (btn) {
+    btn.addEventListener("click", toggleMusic);
+  }
 
   /* ================= Scroll: fade-ins and parallax ================= */
   if (!reduce && "IntersectionObserver" in window) {
