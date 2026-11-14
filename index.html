@@ -26,29 +26,30 @@
     content="Join us for our wedding celebrations at Surat, Gujarat, 11 December 2026. #MayurWedsKrina">
   <meta name="twitter:image" content="https://mayur0711.github.io/mayur-krina-wedding-invitation/img/share.webp">
   <meta name="theme-color" content="#FBF8F4">
-  <link rel="stylesheet" href="style.css">
   <title>Mayur &amp; Krina Wedding</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="img/mono.webp" type="image/webp">
+  <link rel="preload" as="image" href="img/paper-light.webp" type="image/webp">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+SC:wght@400;500;600&family=Pinyon+Script&display=swap">
-
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <!-- ================= Cover ================= -->
   <div id="envelope-screen">
-    <img class="wash" src="img/wash-blush.webp" alt="" style="left:-14%;top:-8%">
-    <img class="wash" src="img/wash-lavender.webp" alt="" style="right:-18%;top:18%;animation-delay:-6s">
-    <img class="wash" src="img/wash-peach.webp" alt="" style="left:-10%;bottom:-12%;animation-delay:-3s">
-    <img class="wash" src="img/wash-sage.webp" alt="" style="right:-12%;bottom:-16%;animation-delay:-9s">
+    <img class="wash" src="img/wash-blush.webp" alt="" width="700" height="700" decoding="async" style="left:-14%;top:-8%">
+    <img class="wash" src="img/wash-lavender.webp" alt="" width="700" height="700" decoding="async" style="right:-18%;top:18%;animation-delay:-6s">
+    <img class="wash" src="img/wash-peach.webp" alt="" width="640" height="640" decoding="async" style="left:-10%;bottom:-12%;animation-delay:-3s">
+    <img class="wash" src="img/wash-sage.webp" alt="" width="640" height="640" decoding="async" style="right:-12%;bottom:-16%;animation-delay:-9s">
     <div class="jaali" aria-hidden="true"></div>
     <div class="floral" style="rotate:180deg;left:-6%;top:-3%;--origin:5% 5%;--dur:7s" aria-hidden="true"><img
-        src="img/floral2.webp" alt=""></div>
+        src="img/floral2.webp" alt="" width="600" height="594" decoding="async"></div>
     <div class="floral flip" style="right:-8%;bottom:-4%;--origin:90% 95%;--dur:9s" aria-hidden="true"><img
-        src="img/floral3.webp" alt=""></div>
+        src="img/floral3.webp" alt="" width="600" height="546" decoding="async"></div>
     <div class="floral" style="left:-10%;bottom:6%;width:clamp(120px,28vw,240px);--dur:8s" aria-hidden="true"><img
-        src="img/floral1.webp" alt=""></div>
+        src="img/floral1.webp" alt="" width="600" height="492" decoding="async"></div>
     <canvas id="dust" aria-hidden="true"></canvas>
     <div class="frame" aria-hidden="true"></div>
 
@@ -145,11 +146,11 @@
   <main id="top">
     <!-- ================= Hero ================= -->
     <section class="hero">
-      <img class="wash" src="img/wash-blush.webp" alt="" style="left:-12%;top:30%">
-      <img class="wash" src="img/wash-lavender.webp" alt="" style="right:-14%;top:44%">
+      <img class="wash" src="img/wash-blush.webp" alt="" width="700" height="700" decoding="async" style="left:-12%;top:30%">
+      <img class="wash" src="img/wash-lavender.webp" alt="" width="700" height="700" decoding="async" style="right:-14%;top:44%">
       <div class="hero-art"><img id="hero-img" src="img/hero.webp"
-          alt="Watercolour garden with stone balustrades, floral urns and a lawn leading into the trees" width="2200"
-          height="917"></div>
+          alt="Watercolour garden with stone balustrades, floral urns and a lawn leading into the trees" width="1600"
+          height="667" fetchpriority="high" decoding="async"></div>
       <div class="wrap hero-inner">
         <span class="mono" role="img" aria-label="Mayur and Krina monogram"></span>
         <p class="eyebrow">Together with their families</p>
@@ -177,12 +178,12 @@
 
     <!-- ================= Families ================= -->
     <section id="families">
-      <img class="wash" src="img/wash-peach.webp" alt="" style="left:-18%;top:10%">
-      <img class="wash" src="img/wash-lavender.webp" alt="" style="right:-20%;bottom:0">
+      <img class="wash" src="img/wash-peach.webp" alt="" width="640" height="640" loading="lazy" decoding="async" style="left:-18%;top:10%">
+      <img class="wash" src="img/wash-lavender.webp" alt="" width="700" height="700" loading="lazy" decoding="async" style="right:-20%;bottom:0">
       <div class="floral" style="rotate:-20deg;left:-46px;top:-56px;--dur:8s" aria-hidden="true"><img
-          src="img/floral1.webp" alt=""></div>
+          src="img/floral1.webp" alt="" width="600" height="492" loading="lazy" decoding="async"></div>
       <div class="floral flip" style="right:-44px;bottom:-230px;width:clamp(130px,26vw,250px);--dur:9s;--origin:90% 90%"
-        aria-hidden="true"><img src="img/floral3.webp" alt=""></div>
+        aria-hidden="true"><img src="img/floral3.webp" alt="" width="600" height="546" loading="lazy" decoding="async"></div>
       <div class="wrap">
         <p class="eyebrow">Two families, one promise</p>
         <h2>Our Families</h2>
@@ -211,7 +212,7 @@
 
     <!-- ================= Story ================= -->
     <section id="story">
-      <img class="wash" src="img/wash-blush2.webp" alt=""
+      <img class="wash" src="img/wash-blush2.webp" alt="" width="560" height="560" loading="lazy" decoding="async"
         style="left:50%;top:18%;translate:-50% 0;width:clamp(320px,80vw,620px)">
       <div class="wrap">
         <p class="eyebrow">Some chapters are written by destiny</p>
@@ -222,7 +223,7 @@
           <div class="track" id="track">
             <div class="slide">
               <figure>
-                <div class="photo"><img src="img/story1.webp" alt="The Unexpected “Hey”"
+                <div class="photo"><img src="img/story1.webp" alt="The Unexpected “Hey”" width="1080" height="1920" loading="lazy" decoding="async"
                     style="object-position:50% 62%">
                 </div>
                 <figcaption>The Unexpected “Hey”</figcaption>
@@ -231,7 +232,7 @@
             </div>
             <div class="slide">
               <figure>
-                <div class="photo"><img src="img/story2.webp" alt="When Two Hearts Said Yes"
+                <div class="photo"><img src="img/story2.webp" alt="When Two Hearts Said Yes" width="1080" height="1440" loading="lazy" decoding="async"
                     style="object-position:50% 45%"></div>
                 <figcaption>When Two Hearts Said Yes</figcaption>
                 <!-- <span class="when">Los Angeles &middot; 2021</span> -->
@@ -239,7 +240,7 @@
             </div>
             <div class="slide">
               <figure>
-                <div class="photo"><img src="img/story3.webp" alt="Adventures & Little Memories"
+                <div class="photo"><img src="img/story3.webp" alt="Adventures & Little Memories" width="960" height="1545" loading="lazy" decoding="async"
                     style="object-position:50% 60%"></div>
                 <figcaption>Adventures & Little Memories</figcaption>
                 <!-- <span class="when">Dubai &middot; 2025</span> -->
@@ -247,7 +248,7 @@
             </div>
             <div class="slide">
               <figure>
-                <div class="photo"><img src="img/story4.webp" alt="From Promise to Forever"
+                <div class="photo"><img src="img/story4.webp" alt="From Promise to Forever" width="1080" height="1440" loading="lazy" decoding="async"
                     style="object-position:50% 50%"></div>
                 <figcaption>From Promise to Forever</figcaption>
                 <!-- <span class="when">Goa &middot; 2026</span> -->
@@ -263,15 +264,15 @@
     <!-- ================= Events ================= -->
     <section id="events">
       <div class="floral flip" style="rotate:-160deg;right:-50px;top:-230px;--dur:8.5s;--origin:90% 10%"
-        aria-hidden="true"><img src="img/floral2.webp" alt=""></div>
+        aria-hidden="true"><img src="img/floral2.webp" alt="" width="600" height="594" loading="lazy" decoding="async"></div>
       <div class="wrap">
         <p class="eyebrow">Four celebrations, one forever</p>
         <h2>Schedule of Events</h2>
         <div class="ornament" aria-hidden="true"><span>✦</span></div>
         <div class="events-list">
           <article class="event">
-            <div class="art-wrap"><img class="wash" src="img/wash-blush.webp" alt=""><img class="art"
-                src="img/mehendi.webp"
+            <div class="art-wrap"><img class="wash" src="img/wash-blush.webp" alt="" width="700" height="700" loading="lazy" decoding="async"><img class="art"
+                src="img/mehendi.webp" width="1100" height="569" loading="lazy" decoding="async"
                 alt="Watercolour of the bride and her friends applying mehendi among marigolds and roses"></div>
             <p class="when">Wednesday &middot; 9th December 2026</p>
             <h3 class="sheen-text">Rang-e-Mehendi</h3>
@@ -297,8 +298,8 @@
             </div>
           </article>
           <article class="event">
-            <div class="art-wrap"><img class="wash" src="img/wash-peach.webp" alt=""><img class="art"
-                src="img/haldi.webp" alt="Watercolour of the couple at a brass urli with haldi, parasols and marigolds">
+            <div class="art-wrap"><img class="wash" src="img/wash-peach.webp" alt="" width="640" height="640" loading="lazy" decoding="async"><img class="art"
+                src="img/haldi.webp" width="1100" height="616" loading="lazy" decoding="async" alt="Watercolour of the couple at a brass urli with haldi, parasols and marigolds">
             </div>
             <p class="when">Thursday &middot; 10th December 2026</p>
             <h3 class="sheen-text">Pithi & Petals</h3>
@@ -308,8 +309,8 @@
             <a href="https://maps.app.goo.gl/tQjNgFm3FGrhH8YJ8" target="_blank" rel="noopener">Get directions</a>
           </article>
           <article class="event">
-            <div class="art-wrap"><img class="wash" src="img/wash-lavender.webp" alt=""><img class="art"
-                src="img/reception.webp"
+            <div class="art-wrap"><img class="wash" src="img/wash-lavender.webp" alt="" width="700" height="700" loading="lazy" decoding="async"><img class="art"
+                src="img/reception.webp" width="1100" height="709" loading="lazy" decoding="async"
                 alt="Watercolour of the couple dancing under chandeliers framed by wisteria and pearls"></div>
             <p class="when">Thursday &middot; 10th December 2026</p>
             <h3 class="sheen-text">Jashn-e-Reception</h3>
@@ -319,8 +320,8 @@
             <a href="https://maps.app.goo.gl/T5NM2CRHg4DG46UF7" target="_blank" rel="noopener">Get directions</a>
           </article>
           <article class="event">
-            <div class="art-wrap"><img class="wash" src="img/wash-blush2.webp" alt=""><img class="art"
-                src="img/wedding.webp" alt="Watercolour of the couple before a red floral mandap with brass lamps">
+            <div class="art-wrap"><img class="wash" src="img/wash-blush2.webp" alt="" width="560" height="560" loading="lazy" decoding="async"><img class="art"
+                src="img/wedding.webp" width="1100" height="701" loading="lazy" decoding="async" alt="Watercolour of the couple before a red floral mandap with brass lamps">
             </div>
             <p class="when">Friday &middot; 11th December 2026</p>
             <h3 class="sheen-text">Saat Phere & Forever</h3>
@@ -513,7 +514,7 @@
     </section> -->
 
     <footer>
-      <img class="wash" src="img/wash-peach.webp" alt="" style="left:50%;top:0;translate:-50% 0">
+      <img class="wash" src="img/wash-peach.webp" alt="" width="640" height="640" loading="lazy" decoding="async" style="left:50%;top:0;translate:-50% 0">
       <div class="wrap">
         <span class="mono" aria-hidden="true"></span>
         <p class="eyebrow">Until our forever begins</p>
@@ -531,7 +532,7 @@
   <canvas id="confetti" aria-hidden="true"></canvas>
   <canvas id="petals" aria-hidden="true"></canvas>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 
 </body>
 

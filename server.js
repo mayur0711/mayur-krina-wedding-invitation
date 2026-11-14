@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 
 const PORT = 3000;
 const MIME = {
@@ -28,8 +29,43 @@ const server = http.createServer((req, res) => {
 
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME[ext] || 'application/octet-stream';
-    res.writeHead(200, { 'Content-Type': contentType });
-    fs.createReadStream(filePath).pipe(res);
+    const etag = `W/"${stats.size}-${stats.mtime.getTime()}"`;
+
+    // Cache control: 1 year immutable for images/assets, 1 hour for html/css/js
+    const isAsset = ['.webp', '.png', '.jpg', '.jpeg', '.ico', '.svg', '.woff2'].includes(ext);
+    const cacheControl = isAsset 
+      ? 'public, max-age=31536000, immutable' 
+      : 'public, max-age=3600';
+
+    if (req.headers['if-none-match'] === etag) {
+      res.writeHead(304, { 'ETag': etag, 'Cache-Control': cacheControl });
+      res.end();
+      return;
+    }
+
+    const headers = {
+      'Content-Type': contentType,
+      'ETag': etag,
+      'Cache-Control': cacheControl,
+      'Vary': 'Accept-Encoding'
+    };
+
+    const acceptEncoding = req.headers['accept-encoding'] || '';
+    const compressible = ['.html', '.css', '.js', '.svg'].includes(ext);
+
+    if (compressible && acceptEncoding.includes('gzip')) {
+      headers['Content-Encoding'] = 'gzip';
+      res.writeHead(200, headers);
+      fs.createReadStream(filePath).pipe(zlib.createGzip()).pipe(res);
+    } else if (compressible && acceptEncoding.includes('deflate')) {
+      headers['Content-Encoding'] = 'deflate';
+      res.writeHead(200, headers);
+      fs.createReadStream(filePath).pipe(zlib.createDeflate()).pipe(res);
+    } else {
+      headers['Content-Length'] = stats.size;
+      res.writeHead(200, headers);
+      fs.createReadStream(filePath).pipe(res);
+    }
   });
 });
 
