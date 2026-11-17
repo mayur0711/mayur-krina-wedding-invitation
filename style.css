@@ -971,6 +971,19 @@ body.locked .hero-art,
   color: var(--ink-soft)
 }
 
+/* ================= Family Members ================= */
+#family-members {
+  padding-block: 76px;
+}
+
+#family-members .fam p {
+  line-height: 1.6;
+}
+
+#family-members .fam .rel {
+  margin-top: 18px;
+}
+
 /* ================= Story ================= */
 .carousel {
   position: relative;
