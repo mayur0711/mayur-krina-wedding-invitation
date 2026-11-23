@@ -51,19 +51,32 @@
     if (reduce) return;
     const c = $("#dust"); if (!c) return;
     const x = c.getContext("2d"); let W, H, dpr, P = [];
+    const spriteSize = 32;
+    const sprite = document.createElement("canvas");
+    sprite.width = spriteSize; sprite.height = spriteSize;
+    const sx = sprite.getContext("2d");
+    const sg = sx.createRadialGradient(spriteSize / 2, spriteSize / 2, 0, spriteSize / 2, spriteSize / 2, spriteSize / 2);
+    sg.addColorStop(0, "rgba(196,152,70,1)");
+    sg.addColorStop(1, "rgba(196,152,70,0)");
+    sx.fillStyle = sg;
+    sx.fillRect(0, 0, spriteSize, spriteSize);
+
     function size() { dpr = Math.min(devicePixelRatio || 1, 2); W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; }
-    size(); addEventListener("resize", size);
+    size(); addEventListener("resize", size, { passive: true });
     const mk = any => ({ x: Math.random() * W, y: any ? Math.random() * H : H + 10, r: (Math.random() * 1.5 + .5) * dpr, vy: -(Math.random() * .3 + .1) * dpr, vx: (Math.random() - .5) * .15 * dpr, t: Math.random() * 6, ts: Math.random() * .04 + .01 });
-    for (let i = 0; i < (innerWidth < 520 ? 45 : 80); i++) P.push(mk(true));
+    const count = innerWidth < 520 ? 24 : 50;
+    for (let i = 0; i < count; i++) P.push(mk(true));
     (function f() {
-      x.clearRect(0, 0, W, H);
       if (!dustOn) return;
+      x.clearRect(0, 0, W, H);
       P.forEach((p, i) => {
         p.x += p.vx; p.y += p.vy; p.t += p.ts; if (p.y < -10) P[i] = mk(false);
         const a = .3 + .6 * Math.abs(Math.sin(p.t));
-        const g = x.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3.5); g.addColorStop(0, `rgba(196,152,70,${a})`); g.addColorStop(1, "rgba(196,152,70,0)");
-        x.fillStyle = g; x.beginPath(); x.arc(p.x, p.y, p.r * 3.5, 0, 7); x.fill();
+        const rad = p.r * 3.5;
+        x.globalAlpha = a;
+        x.drawImage(sprite, p.x - rad, p.y - rad, rad * 2, rad * 2);
       });
+      x.globalAlpha = 1;
       requestAnimationFrame(f);
     })();
   })();
@@ -243,7 +256,7 @@
     if (prevBtn) prevBtn.addEventListener("click", () => go(cur - 1));
     if (nextBtn) nextBtn.addEventListener("click", () => go(cur + 1));
 
-    addEventListener("resize", syncDots);
+    addEventListener("resize", syncDots, { passive: true });
     syncDots();
   }
 
