@@ -973,7 +973,7 @@ body.locked .hero-art,
 
 /* ================= Family Members ================= */
 #family-members {
-  padding-block: 76px;
+  padding-block: 55px;
 }
 
 #family-members .fam-grid {
@@ -1740,8 +1740,9 @@ input[type=text]:focus-visible {
 
 footer {
   position: relative;
-  padding-block: 70px 120px;
-  text-align: center
+  /* padding-block: 70px 120px; */
+  padding: 50px 0;
+  text-align: center;
 }
 
 footer .mono {
