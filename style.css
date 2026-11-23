@@ -18,7 +18,7 @@ img {
 }
 
 :root {
-    --mono-file: url(img/mono.webp);
+  --mono-file: url(img/mono.webp);
   --paper: #FBF8F4;
   --ink: #3D3957;
   --ink-soft: #5E5A78;
@@ -926,7 +926,7 @@ body.locked .hero-art,
 /* ================= Families ================= */
 .fam-grid {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto;
   align-items: start;
   gap: 18px;
   margin-top: 36px
@@ -1180,7 +1180,7 @@ body.locked .hero-art,
 }
 
 .event .dress {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-style: italic;
   color: var(--muted);
   margin: 8px 0 0
