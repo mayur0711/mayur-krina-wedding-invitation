@@ -1763,7 +1763,11 @@ footer .tag {
   font-size: 1.1rem;
   letter-spacing: .14em;
   color: var(--gold-deep);
-  margin: 0
+  margin: 0;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
 }
 
 .music {
