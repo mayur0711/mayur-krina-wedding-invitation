@@ -416,7 +416,7 @@
 
   /* ================= Scroll: fade-ins and parallax ================= */
   if (!reduce && "IntersectionObserver" in window) {
-    const targets = document.querySelectorAll("section:not(.hero) .wrap > *, .event, .fam, .travel > div, footer .wrap > *");
+    const targets = document.querySelectorAll("section:not(.hero) .wrap > *, .event, .fam, .travel > div, footer .wrap > :not(.tag)");
     const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add("seen"); io.unobserve(en.target); } }), { rootMargin: "0px 0px -8% 0px", threshold: .08 });
     targets.forEach(t => { if (t.getBoundingClientRect().top > innerHeight) { t.classList.add("fade"); io.observe(t); } });
   }
